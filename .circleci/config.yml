@@ -45,17 +45,17 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
-            # run tests!
-            - run:
-                name: Running test
-                command: gradle test
+      # run tests!
+      - run:
+          name: Running test
+          command: gradle test
 
-            # Upload test coverage
-            - run:
-                name: Generate test coverage
-                command: gradle jacocoTestReport
+      # Upload test coverage
+      - run:
+          name: Generate test coverage
+          command: gradle jacocoTestReport
 
-            # Upload test coverage
-            - run:
-                name: Upload test coverage
-                command: bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
+      # Upload test coverage
+      - run:
+          name: Upload test coverage
+          command: bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
