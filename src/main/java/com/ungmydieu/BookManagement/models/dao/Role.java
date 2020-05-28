@@ -6,7 +6,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 @Entity
 @Data
@@ -20,15 +19,4 @@ public class Role {
     @Column(nullable = false)
     @NonNull
     private String name;
-
-    @ManyToMany(mappedBy = "roles")
-    private Collection<User> users;
-
-    public Collection<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Collection<User> users) {
-        this.users = users;
-    }
 }
