@@ -30,11 +30,11 @@ public class User {
     @NotBlank
     private String password;
 
-    @JsonAlias("last_name")
-    private String first_name;
-
     @JsonAlias("first_name")
-    private String last_name;
+    private String firstName;
+
+    @JsonAlias("last_name")
+    private String lastName;
 
     @Column(nullable = false)
     @NonNull
