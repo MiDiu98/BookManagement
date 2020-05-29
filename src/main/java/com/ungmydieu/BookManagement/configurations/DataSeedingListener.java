@@ -1,9 +1,9 @@
-package com.ungmydieu.BookManagement.configurations;
+package com.ungmydieu.bookmanagement.configurations;
 
-import com.ungmydieu.BookManagement.models.dao.Role;
-import com.ungmydieu.BookManagement.models.dao.User;
-import com.ungmydieu.BookManagement.repositories.RoleRepository;
-import com.ungmydieu.BookManagement.repositories.UserRepository;
+import com.ungmydieu.bookmanagement.models.dao.Role;
+import com.ungmydieu.bookmanagement.models.dao.User;
+import com.ungmydieu.bookmanagement.repositories.RoleRepository;
+import com.ungmydieu.bookmanagement.repositories.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;

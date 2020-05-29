@@ -1,11 +1,11 @@
-package com.ungmydieu.BookManagement.services.impl;
+package com.ungmydieu.bookmanagement.services.impl;
 
-import com.ungmydieu.BookManagement.exceptions.BadRequestException;
-import com.ungmydieu.BookManagement.models.dao.User;
-import com.ungmydieu.BookManagement.models.dto.Register;
-import com.ungmydieu.BookManagement.repositories.RoleRepository;
-import com.ungmydieu.BookManagement.repositories.UserRepository;
-import com.ungmydieu.BookManagement.services.AuthenticationService;
+import com.ungmydieu.bookmanagement.exceptions.BadRequestException;
+import com.ungmydieu.bookmanagement.models.dao.User;
+import com.ungmydieu.bookmanagement.models.dto.Register;
+import com.ungmydieu.bookmanagement.repositories.RoleRepository;
+import com.ungmydieu.bookmanagement.repositories.UserRepository;
+import com.ungmydieu.bookmanagement.services.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

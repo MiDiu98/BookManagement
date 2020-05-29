@@ -1,4 +1,4 @@
-package com.ungmydieu.BookManagement.constants;
+package com.ungmydieu.bookmanagement.constants;
 
 public class Constants {
     public static final long ACCESS_TOKEN_VALIDITY_SECONDS = 30*24*60*60;

@@ -1,4 +1,4 @@
-package com.ungmydieu.BookManagement.configurations;
+package com.ungmydieu.bookmanagement.configurations;
 
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,8 +16,8 @@ import java.util.Date;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.ungmydieu.BookManagement.constants.Constants.ACCESS_TOKEN_VALIDITY_SECONDS;
-import static com.ungmydieu.BookManagement.constants.Constants.AUTHORITIES_KEY;
+import static com.ungmydieu.bookmanagement.constants.Constants.ACCESS_TOKEN_VALIDITY_SECONDS;
+import static com.ungmydieu.bookmanagement.constants.Constants.AUTHORITIES_KEY;
 
 @Component
 @Configuration

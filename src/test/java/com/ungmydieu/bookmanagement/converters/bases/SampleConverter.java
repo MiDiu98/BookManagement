@@ -1,4 +1,4 @@
-package com.ungmydieu.BookManagement.converters.bases;
+package com.ungmydieu.bookmanagement.converters.bases;
 
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;

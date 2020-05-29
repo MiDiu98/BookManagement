@@ -1,4 +1,4 @@
-package com.ungmydieu.BookManagement.configurations;
+package com.ungmydieu.bookmanagement.configurations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.ungmydieu.BookManagement.constants.Constants.HEADER_STRING;
-import static com.ungmydieu.BookManagement.constants.Constants.TOKEN_PREFIX;
+import static com.ungmydieu.bookmanagement.constants.Constants.HEADER_STRING;
+import static com.ungmydieu.bookmanagement.constants.Constants.TOKEN_PREFIX;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 

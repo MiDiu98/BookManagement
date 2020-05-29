@@ -1,4 +1,4 @@
-package com.ungmydieu.BookManagement.models.dao;
+package com.ungmydieu.bookmanagement.models.dao;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.Data;

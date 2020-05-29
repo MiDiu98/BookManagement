@@ -1,10 +1,10 @@
-package com.ungmydieu.BookManagement.controllers;
+package com.ungmydieu.bookmanagement.controllers;
 
-import com.ungmydieu.BookManagement.configurations.TokenProvider;
-import com.ungmydieu.BookManagement.models.AuthToken;
-import com.ungmydieu.BookManagement.models.dao.Login;
-import com.ungmydieu.BookManagement.models.dto.Register;
-import com.ungmydieu.BookManagement.services.AuthenticationService;
+import com.ungmydieu.bookmanagement.configurations.TokenProvider;
+import com.ungmydieu.bookmanagement.models.AuthToken;
+import com.ungmydieu.bookmanagement.models.dao.Login;
+import com.ungmydieu.bookmanagement.models.dto.Register;
+import com.ungmydieu.bookmanagement.services.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

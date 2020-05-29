@@ -1,4 +1,4 @@
-package com.ungmydieu.BookManagement.models;
+package com.ungmydieu.bookmanagement.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

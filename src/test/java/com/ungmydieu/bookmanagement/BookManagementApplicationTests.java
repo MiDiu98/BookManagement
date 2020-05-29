@@ -1,4 +1,4 @@
-package com.ungmydieu.BookManagement;
+package com.ungmydieu.bookmanagement;
 
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;

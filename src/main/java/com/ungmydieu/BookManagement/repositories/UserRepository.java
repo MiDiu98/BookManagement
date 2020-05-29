@@ -1,6 +1,6 @@
-package com.ungmydieu.BookManagement.repositories;
+package com.ungmydieu.bookmanagement.repositories;
 
-import com.ungmydieu.BookManagement.models.dao.User;
+import com.ungmydieu.bookmanagement.models.dao.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Integer> {

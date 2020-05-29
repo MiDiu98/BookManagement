@@ -1,4 +1,4 @@
-package com.ungmydieu.BookManagement.models.dto;
+package com.ungmydieu.bookmanagement.models.dto;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

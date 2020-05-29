@@ -1,6 +1,6 @@
-package com.ungmydieu.BookManagement.services;
+package com.ungmydieu.bookmanagement.services;
 
-import com.ungmydieu.BookManagement.models.dao.User;
+import com.ungmydieu.bookmanagement.models.dao.User;
 
 import java.security.Principal;
 import java.util.List;

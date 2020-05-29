@@ -1,8 +1,8 @@
-package com.ungmydieu.BookManagement.services.impl;
+package com.ungmydieu.bookmanagement.services.impl;
 
-import com.ungmydieu.BookManagement.models.dao.Role;
-import com.ungmydieu.BookManagement.models.dao.User;
-import com.ungmydieu.BookManagement.repositories.UserRepository;
+import com.ungmydieu.bookmanagement.models.dao.Role;
+import com.ungmydieu.bookmanagement.models.dao.User;
+import com.ungmydieu.bookmanagement.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
