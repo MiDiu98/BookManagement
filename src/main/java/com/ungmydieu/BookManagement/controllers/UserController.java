@@ -1,5 +1,6 @@
 package com.ungmydieu.bookmanagement.controllers;
 
+import com.ungmydieu.bookmanagement.converters.bases.Converter;
 import com.ungmydieu.bookmanagement.models.dao.User;
 import com.ungmydieu.bookmanagement.models.dto.UserDTO;
 import com.ungmydieu.bookmanagement.services.UserService;
@@ -16,20 +17,22 @@ import java.util.List;
 @RequestMapping("api/users")
 @PreAuthorize("isAuthenticated()")
 public class UserController {
+    @Autowired
+    private Converter<User, UserDTO> userUserDTOConverter;
 
     @Autowired
     private UserService userService;
 
     @GetMapping
     @PreAuthorize("permitAll()")
-    public List<User> getAll() {
-        return userService.getAll();
+    public List<UserDTO> getAll() {
+        return userUserDTOConverter.convert(userService.getAll());
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("permitAll()")
-    public User getUserById(@PathVariable int id) {
-        return userService.getUserById(id);
+    public UserDTO getUserById(@PathVariable int id) {
+        return userUserDTOConverter.convert(userService.getUserById(id));
     }
 
     @PutMapping("/{id}")
