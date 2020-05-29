@@ -12,7 +12,7 @@ jobs:
         environment:
           MYSQL_HOST: 127.0.0.1
           MYSQL_ROOT_PASSWORD: 1234
-          MYSQL_DATABASE: blog-test
+          MYSQL_DATABASE: book_management_test
           MYSQL_USER: spring
           MYSQL_PASSWORD: Spring12345
 
