@@ -1,6 +1,6 @@
 package com.ungmydieu.bookmanagement.controllers;
 
-import com.ungmydieu.bookmanagement.models.AuthToken;
+import com.ungmydieu.bookmanagement.models.dto.AuthToken;
 import com.ungmydieu.bookmanagement.models.dao.Login;
 import com.ungmydieu.bookmanagement.models.dto.Register;
 import com.ungmydieu.bookmanagement.services.AuthenticationService;

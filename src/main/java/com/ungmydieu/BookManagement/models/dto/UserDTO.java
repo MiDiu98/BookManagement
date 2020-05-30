@@ -1,16 +1,17 @@
 package com.ungmydieu.bookmanagement.models.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Data
-@RequiredArgsConstructor
-public class User {
-    @NotNull
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserDTO {
+    private int id;
+
     @NotBlank(message = "Email is mandatory")
     private String email;
 
@@ -22,9 +23,11 @@ public class User {
 
     private String avatar;
 
-    @NonNull
     private boolean enable;
 
-    @NonNull
     private String[] roles;
+
+    public boolean getEnable() {
+        return this.enable;
+    }
 }
