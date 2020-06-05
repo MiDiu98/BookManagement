@@ -1,4 +1,4 @@
-package com.ungmydieu.BookManagement.models.dao;
+package com.ungmydieu.bookmanagement.models.dao;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.Data;
@@ -49,4 +49,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id", nullable = false))
     private Set<Role> roles;
 
+    public boolean getEnable() {
+        return this.enabled;
+    }
 }

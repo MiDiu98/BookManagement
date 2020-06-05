@@ -1,4 +1,4 @@
-package com.ungmydieu.BookManagement.exceptions;
+package com.ungmydieu.bookmanagement.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -1,8 +1,9 @@
-package com.ungmydieu.BookManagement.models.dto;
+package com.ungmydieu.bookmanagement.models.dto;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -10,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @RequiredArgsConstructor
 public class Register {
     @NotNull
-    @NotBlank(message = "Email is mandatory")
+    @Email
     private String email;
 
     @NotNull

@@ -1,6 +1,6 @@
-package com.ungmydieu.BookManagement.configurations;
+package com.ungmydieu.bookmanagement.configurations;
 
-import com.ungmydieu.BookManagement.services.impl.UserDetailsServiceImpl;
+import com.ungmydieu.bookmanagement.services.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
