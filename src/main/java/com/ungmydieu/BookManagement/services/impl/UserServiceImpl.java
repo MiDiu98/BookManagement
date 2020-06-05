@@ -29,13 +29,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(int id) {
-        verifyUserIdExits(id);
+        verifyUserIdExist(id);
         return userRepository.findById(id).get();
     }
 
     @Override
     public User update(Principal principal, int id, UserDTO userDTO) {
-        verifyUserIdExits(id);
+        verifyUserIdExist(id);
         verifyAuthor(principal, id);
 
         User user = userRepository.getOne(id);
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateByAdmin(int id, UserDTO userDTO) {
-        verifyUserIdExits(id);
+        verifyUserIdExist(id);
 
         User user = userRepository.getOne(id);
         user.setEnabled(userDTO.getEnable());
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    private void verifyUserIdExits(int id) {
+    private void verifyUserIdExist(int id) {
         if (!userRepository.existsById(id)) {
             throw new NotFoundException(String.format("User id %d is not found", id));
         }
