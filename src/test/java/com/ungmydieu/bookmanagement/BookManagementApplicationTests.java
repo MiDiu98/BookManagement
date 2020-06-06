@@ -20,7 +20,7 @@ public class BookManagementApplicationTests {
 
 	@Test
 	public void test_dataSourceUrl() {
-		Assert.assertEquals(dataSourceUrl, "jdbc:mysql://localhost:3306/book_management_test");
+		Assert.assertEquals(dataSourceUrl, "jdbc:postgresql://localhost:5432/bookmanagement");
 	}
 
 }

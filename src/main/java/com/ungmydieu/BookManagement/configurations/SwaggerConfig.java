@@ -1,4 +1,4 @@
-package com.ungmydieu.BookManagement.configurations;
+package com.ungmydieu.bookmanagement.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
