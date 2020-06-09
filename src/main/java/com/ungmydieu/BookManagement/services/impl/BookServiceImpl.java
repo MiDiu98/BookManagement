@@ -1,6 +1,5 @@
 package com.ungmydieu.bookmanagement.services.impl;
 
-import com.ungmydieu.bookmanagement.converters.bases.Converter;
 import com.ungmydieu.bookmanagement.exceptions.BadRequestException;
 import com.ungmydieu.bookmanagement.exceptions.NotFoundException;
 import com.ungmydieu.bookmanagement.models.dao.Book;
@@ -23,8 +22,6 @@ import java.util.List;
 
 @Service
 public class BookServiceImpl implements BookService {
-    @Autowired
-    private Converter<BookDTO, Book> bookDTOBookConverter;
 
     @Autowired
     private BookRepository bookRepository;
@@ -97,11 +94,6 @@ public class BookServiceImpl implements BookService {
         verifyAuthor(principal, id);
 
         bookRepository.delete(bookRepository.getOne(id));
-//        bookRepository.findById(id)
-//                .map(book -> {
-//                    bookRepository.delete(book);
-//                    return ResponseEntity.ok().build();
-//                }).orElseThrow(() -> new NotFoundException("Book not found with id " + id));
     }
 
     private void verifyBookIdExist(int id) {
