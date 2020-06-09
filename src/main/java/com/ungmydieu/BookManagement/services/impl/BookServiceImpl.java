@@ -46,6 +46,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public List<Book> findByTitleAndAuthor(String title, String author) {
+        return bookRepository.findByTitleContainingAndAuthorContainingAllIgnoreCase(title, author);
+    }
+
+    @Override
     public Book getBookById(int id) {
         verifyBookIdExist(id);
         return bookRepository.findById(id).get();

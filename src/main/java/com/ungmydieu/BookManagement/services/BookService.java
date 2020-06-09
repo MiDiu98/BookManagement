@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface BookService {
     List<Book> getAllBooks(Integer pageNo, Integer pageSize, String sortBy);
+    List<Book> findByTitleAndAuthor(String title, String author);
     Book getBookById(int id);
     Book create(Principal principal, BookDTO bookDTO);
     Book update(Principal principal, int id, BookDTO bookDTO);
