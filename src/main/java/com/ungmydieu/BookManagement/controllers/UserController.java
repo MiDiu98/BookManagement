@@ -37,15 +37,15 @@ public class UserController {
 
     @PutMapping("/{id}")
     @Secured("ROLE_USER")
-    public User update(Principal principal, @PathVariable int id, @RequestBody UserDTO userDTO) {
-        return userService.update(principal, id, userDTO);
+    public UserDTO update(Principal principal, @PathVariable int id, @RequestBody UserDTO userDTO) {
+        return userUserDTOConverter.convert(userService.update(principal, id, userDTO));
 
     }
 
     @PutMapping("/admin/{id}")
     @Secured("ROLE_ADMIN")
-    public User updateByAdmin(@PathVariable int id, @RequestBody UserDTO userDTO) {
-        return userService.updateByAdmin(id, userDTO);
+    public UserDTO updateByAdmin(@PathVariable int id, @RequestBody UserDTO userDTO) {
+        return userUserDTOConverter.convert(userService.updateByAdmin(id, userDTO));
 
     }
 }
