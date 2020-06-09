@@ -5,9 +5,6 @@ import com.ungmydieu.bookmanagement.models.dao.Book;
 import com.ungmydieu.bookmanagement.models.dto.BookDTO;
 import com.ungmydieu.bookmanagement.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -29,13 +26,12 @@ public class BookController {
 
     @GetMapping
     @PreAuthorize("permitAll()")
-    public ResponseEntity<List<BookDTO>> getAll(
+    public List<BookDTO> getAll(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(defaultValue = "id") String sortBy)
     {
-        List<BookDTO> list = bookBookDTOConverter.convert(bookService.getAllBooks(pageNo, pageSize, sortBy));
-        return new ResponseEntity<List<BookDTO>>(list, new HttpHeaders(), HttpStatus.OK);
+        return bookBookDTOConverter.convert(bookService.getAllBooks(pageNo, pageSize, sortBy));
     }
 
     @GetMapping("/{id}")
