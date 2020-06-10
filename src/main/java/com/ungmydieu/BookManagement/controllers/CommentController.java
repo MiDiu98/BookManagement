@@ -23,35 +23,35 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    @GetMapping
+    @GetMapping("/{bookId}")
     @PreAuthorize("permitAll()")
-    public List<CommentDTO> getAll()
+    public List<CommentDTO> getAllByBook(@PathVariable int bookId)
     {
-        return commentCommentDTOConverter.convert(commentService.getAll());
+        return commentCommentDTOConverter.convert(commentService.getAllByBook(bookId));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{bookId}/{id}")
     @PreAuthorize("permitAll()")
     public CommentDTO getById(@PathVariable int id) {
         return commentCommentDTOConverter.convert(commentService.getById(id));
     }
 
-    @PostMapping("/{postId}")
+    @PostMapping("/{bookId}")
     @Secured("ROLE_USER")
-    public CommentDTO create(Principal principal, @PathVariable int postId, @RequestBody CommentDTO commentDTO) {
-        return commentCommentDTOConverter.convert(commentService.create(principal, postId, commentDTO));
+    public CommentDTO create(Principal principal, @PathVariable int bookId, @RequestBody CommentDTO commentDTO) {
+        return commentCommentDTOConverter.convert(commentService.create(principal, bookId, commentDTO));
     }
 
-    @PutMapping("/{postId}/{id}")
+    @PutMapping("/{bookId}/{id}")
     @Secured("ROLE_USER")
-    public CommentDTO update(Principal principal, @PathVariable int postId, @PathVariable int id, @RequestBody CommentDTO commentDTO) {
+    public CommentDTO update(Principal principal, @PathVariable int bookId, @PathVariable int id, @RequestBody CommentDTO commentDTO) {
         return commentCommentDTOConverter.convert(commentService.update(principal, id, commentDTO));
     }
 
 
-    @DeleteMapping("/{postId}/{id}")
+    @DeleteMapping("/{bookId}/{id}")
     @Secured("ROLE_USER")
-    public void delete(Principal principal, @PathVariable String postId, @PathVariable int id) {
+    public void delete(Principal principal, @PathVariable int bookId, @PathVariable int id) {
         commentService.delete(principal, id);
     }
 }

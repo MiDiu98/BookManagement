@@ -7,9 +7,9 @@ import java.security.Principal;
 import java.util.List;
 
 public interface CommentService {
-    List<Comment> getAll();
+    List<Comment> getAllByBook(int bookId);
     Comment getById(int id);
-    Comment create(Principal principal, int postId, CommentDTO commentDTO);
+    Comment create(Principal principal, int bookId, CommentDTO commentDTO);
     Comment update(Principal principal, int id, CommentDTO commentDTO);
     void delete(Principal principal, int id);
 }

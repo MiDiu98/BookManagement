@@ -3,7 +3,9 @@ package com.ungmydieu.bookmanagement.converters.comments;
 import com.ungmydieu.bookmanagement.converters.bases.Converter;
 import com.ungmydieu.bookmanagement.models.dao.Comment;
 import com.ungmydieu.bookmanagement.models.dto.CommentDTO;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CommentDaoToCommentDtoConverter extends Converter<Comment, CommentDTO> {
     @Override
     public CommentDTO convert(Comment source) {

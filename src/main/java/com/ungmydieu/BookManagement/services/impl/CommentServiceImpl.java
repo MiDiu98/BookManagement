@@ -29,21 +29,26 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
-    public List<Comment> getAll() {
-        return commentRepository.findAll();
+    public List<Comment> getAllByBook(int bookId) {
+        verifyBookIdExist(bookId);
+        return commentRepository.findAllByBook(bookRepository.getOne(bookId));
     }
 
     @Override
     public Comment getById(int id) {
+        verifyCommentIdExist(id);
         return commentRepository.findById(id).get();
     }
 
     @Override
-    public Comment create(Principal principal, int postId, CommentDTO commentDTO) {
+    public Comment create(Principal principal, int bookId, CommentDTO commentDTO) {
+        verifyBookIdExist(bookId);
+
         Comment comment = new Comment(commentDTO.getMessage(), LocalDateTime.now(), LocalDateTime.now());
-        comment.setBook(bookRepository.getOne(postId));
+        comment.setBook(bookRepository.getOne(bookId));
         comment.setUser(userRepository.findByEmail(principal.getName()));
-        return comment;
+        commentRepository.save(comment);
+        return commentRepository.getOne(comment.getId());
     }
 
     @Override
@@ -54,7 +59,8 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.getOne(id);
         comment.setMessage(commentDTO.getMessage());
         comment.setUpdateAt(LocalDateTime.now());
-        return comment;
+        commentRepository.save(comment);
+        return commentRepository.getOne(id);
     }
 
     @Override
@@ -75,6 +81,12 @@ public class CommentServiceImpl implements CommentService {
         User currentUser = userRepository.findByEmail(principal.getName());
         if (!currentUser.equals(commentRepository.findById(id).get().getUser())) {
             throw new BadRequestException(String.format("The only author can modify"));
+        }
+    }
+
+    private void verifyBookIdExist(int id) {
+        if (!bookRepository.existsById(id)) {
+            throw new NotFoundException(String.format("Book id %d is not found", id));
         }
     }
 }
