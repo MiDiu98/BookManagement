@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
         verifyUserIdExist(id);
 
         User user = userRepository.getOne(id);
-        user.setEnabled(userDTO.getEnable());
+        user.setEnabled(userDTO.isEnable());
         user.setRoles(new HashSet<>());
         for (String role : userDTO.getRoles()){
             user.getRoles().add(roleRepository.findByName(role));

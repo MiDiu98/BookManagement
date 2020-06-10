@@ -11,7 +11,7 @@ public class BookDtoToBookDaoConverter extends Converter<BookDTO, Book> {
     @Override
     public Book convert(BookDTO source) {
         Book book = new Book(source.getTitle(), source.getAuthor(), source.getCreateAt(), source.getUpdateAt(),
-                source.getEnable());
+                source.isEnabled());
 
         book.setDescription(source.getDescription());
         book.setImage(source.getImage());

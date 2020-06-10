@@ -34,8 +34,4 @@ public class BookDTO {
     private boolean enabled;
 
     private int userId;
-
-    public boolean getEnable() {
-        return this.enabled;
-    }
 }

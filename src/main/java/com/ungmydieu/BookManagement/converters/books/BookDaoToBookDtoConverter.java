@@ -17,7 +17,7 @@ public class BookDaoToBookDtoConverter extends Converter<Book, BookDTO> {
         bookDTO.setCreateAt(source.getCreateAt());
         bookDTO.setUpdateAt(source.getUpdateAt());
         bookDTO.setImage(source.getImage());
-        bookDTO.setEnabled(source.getEnable());
+        bookDTO.setEnabled(source.isEnabled());
         bookDTO.setUserId(source.getUser().getId());
 
         return  bookDTO;

@@ -50,8 +50,4 @@ public class Book {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private User user;
-
-    public boolean getEnable() {
-        return this.enabled;
-    }
 }

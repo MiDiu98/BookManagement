@@ -49,8 +49,4 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "role_id", nullable = false))
     private Set<Role> roles;
-
-    public boolean getEnable() {
-        return this.enabled;
-    }
 }

@@ -19,7 +19,7 @@ public class UserDaoToUserDtoConverter extends Converter<User, UserDTO> {
         userDTO.setLastName(source.getLastName());
         userDTO.setFirstName(source.getFirstName());
         userDTO.setAvatar(source.getAvatar());
-        userDTO.setEnable(source.getEnable());
+        userDTO.setEnable(source.isEnabled());
 
         String[] roles = new String[source.getRoles().size()];
         int i = 0;
