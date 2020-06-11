@@ -9,10 +9,7 @@ import com.ungmydieu.bookmanagement.repositories.BookRepository;
 import com.ungmydieu.bookmanagement.repositories.UserRepository;
 import com.ungmydieu.bookmanagement.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -30,9 +27,8 @@ public class BookServiceImpl implements BookService {
     private UserRepository userRepository;
 
     @Override
-    public List<Book> getAllBooks(Integer pageNo, Integer pageSize, String sortBy) {
-        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-
+    public List<Book> getAllBooks(Integer pageNo, Integer pageSize, String sortBy, String order) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, order.equals("desc")? Sort.by(sortBy).descending():Sort.by(sortBy).ascending());
         Page<Book> pagedResult = bookRepository.findAll(paging);
 
         if(pagedResult.hasContent()) {
@@ -43,8 +39,37 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public List<Book> getAllBooksEnable(Integer pageNo, Integer pageSize, String sortBy, String order) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, order.equals("desc")? Sort.by(sortBy).descending():Sort.by(sortBy).ascending());
+        Slice<Book> pagedResult = bookRepository.findAllByEnabledTrue(paging);
+
+        if(pagedResult.hasContent()) {
+            System.out.println(bookRepository.countAllByEnabledTrue());
+            return pagedResult.getContent();
+        } else {
+            return new ArrayList<Book>();
+        }
+    }
+
+    @Override
+    public List<Book> getAllBooksDisable() {
+        return bookRepository.findAllByEnabledFalse();
+    }
+
+    @Override
     public List<Book> findByTitleAndAuthor(String title, String author) {
         return bookRepository.findByTitleContainingAndAuthorContainingAllIgnoreCase(title, author);
+    }
+
+    @Override
+    public List<Book> findByUser(int userId) {
+        verifyUserIdExist(userId);
+        return bookRepository.findAllByUser(userRepository.getOne(userId));
+    }
+
+    @Override
+    public List<Book> getMyBooks(Principal principal) {
+        return bookRepository.findAllByUser(userRepository.findByEmail(principal.getName()));
     }
 
     @Override
@@ -106,6 +131,12 @@ public class BookServiceImpl implements BookService {
         User currentUser = userRepository.findByEmail(principal.getName());
         if (!currentUser.equals(bookRepository.findById(id).get().getUser())) {
             throw new BadRequestException(String.format("The only author can modify"));
+        }
+    }
+
+    private void verifyUserIdExist(int id) {
+        if (!userRepository.existsById(id)) {
+            throw new NotFoundException(String.format("User id %d is not found", id));
         }
     }
 }
