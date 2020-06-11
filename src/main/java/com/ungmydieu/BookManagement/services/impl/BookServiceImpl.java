@@ -53,6 +53,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public List<Book> getMyBooks(Principal principal) {
+        return bookRepository.findAllByUser(userRepository.findByEmail(principal.getName()));
+    }
+
+    @Override
     public Book getBookById(int id) {
         verifyBookIdExist(id);
         return bookRepository.findById(id).get();
