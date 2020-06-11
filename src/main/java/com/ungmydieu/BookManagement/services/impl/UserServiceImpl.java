@@ -8,6 +8,7 @@ import com.ungmydieu.bookmanagement.repositories.RoleRepository;
 import com.ungmydieu.bookmanagement.repositories.UserRepository;
 import com.ungmydieu.bookmanagement.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -39,7 +40,7 @@ public class UserServiceImpl implements UserService {
         verifyAuthor(principal, id);
 
         User user = userRepository.getOne(id);
-        user.setPassword(userDTO.getPassword());
+        if (userDTO.getPassword() != null) user.setPassword(new BCryptPasswordEncoder().encode(userDTO.getPassword()));
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setAvatar(userDTO.getAvatar());
@@ -52,7 +53,7 @@ public class UserServiceImpl implements UserService {
         verifyUserIdExist(id);
 
         User user = userRepository.getOne(id);
-        user.setEnabled(userDTO.getEnable());
+        user.setEnabled(userDTO.isEnable());
         user.setRoles(new HashSet<>());
         for (String role : userDTO.getRoles()){
             user.getRoles().add(roleRepository.findByName(role));

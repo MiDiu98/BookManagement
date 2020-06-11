@@ -38,6 +38,6 @@ public class UserDaoToUserDtoConverterTest {
         UserDTO userDTO = userUserDTOConverter.convert(user);
         Assert.assertEquals(userDTO.getEmail(), "userTest");
         Assert.assertEquals(userDTO.getPassword(), null);
-        Assert.assertEquals(userDTO.getEnable(), true);
+        Assert.assertEquals(userDTO.isEnable(), true);
     }
 }

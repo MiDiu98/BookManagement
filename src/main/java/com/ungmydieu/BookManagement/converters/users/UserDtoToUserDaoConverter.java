@@ -25,7 +25,7 @@ public class UserDtoToUserDaoConverter extends Converter<UserDTO, User> {
         user.setPassword(source.getPassword());
         user.setLastName(source.getLastName());
         user.setAvatar(source.getAvatar());
-        user.setEnabled(source.getEnable());
+        user.setEnabled(source.isEnable());
 
         if (source.getRoles().length > 0) {
             user.setRoles(new HashSet<>());

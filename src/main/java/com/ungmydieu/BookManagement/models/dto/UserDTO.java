@@ -26,8 +26,4 @@ public class UserDTO {
     private boolean enable;
 
     private String[] roles;
-
-    public boolean getEnable() {
-        return this.enable;
-    }
 }
