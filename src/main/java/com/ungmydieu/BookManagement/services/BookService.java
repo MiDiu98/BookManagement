@@ -7,7 +7,9 @@ import java.security.Principal;
 import java.util.List;
 
 public interface BookService {
-    List<Book> getAllBooks(Integer pageNo, Integer pageSize, String sortBy);
+    List<Book> getAllBooks(Integer pageNo, Integer pageSize, String sortBy, String order);
+    List<Book> getAllBooksEnable(Integer pageNo, Integer pageSize, String sortBy, String order);
+    List<Book> getAllBooksDisable();
     List<Book> findByTitleAndAuthor(String title, String author);
     List<Book> findByUser(int userId);
     List<Book> getMyBooks(Principal principal);

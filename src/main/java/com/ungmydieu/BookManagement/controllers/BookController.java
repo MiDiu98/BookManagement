@@ -25,13 +25,30 @@ public class BookController {
     private BookService bookService;
 
     @GetMapping
-    @PreAuthorize("permitAll()")
+    @Secured("ROLE_ADMIN")
     public List<BookDTO> getAll(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "10") Integer pageSize,
-            @RequestParam(defaultValue = "id") String sortBy)
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String order)
     {
-        return bookBookDTOConverter.convert(bookService.getAllBooks(pageNo, pageSize, sortBy));
+        return bookBookDTOConverter.convert(bookService.getAllBooks(pageNo, pageSize, sortBy, order));
+    }
+
+    @GetMapping("/disable")
+    @Secured("ROLE_ADMIN")
+    public List<BookDTO> getAllBooksDisable() {
+        return bookBookDTOConverter.convert(bookService.getAllBooksDisable());
+    }
+
+    @GetMapping("/enable")
+    public List<BookDTO> getAllBookEnable(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String order)
+    {
+        return bookBookDTOConverter.convert(bookService.getAllBooksEnable(pageNo, pageSize, sortBy, order));
     }
 
     @GetMapping("/{id}")
