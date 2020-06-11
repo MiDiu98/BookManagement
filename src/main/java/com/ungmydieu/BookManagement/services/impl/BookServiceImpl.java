@@ -48,6 +48,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public List<Book> findByUser(int userId) {
+        return bookRepository.findAllByUser(userRepository.getOne(userId));
+    }
+
+    @Override
     public Book getBookById(int id) {
         verifyBookIdExist(id);
         return bookRepository.findById(id).get();

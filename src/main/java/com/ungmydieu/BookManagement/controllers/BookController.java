@@ -46,6 +46,11 @@ public class BookController {
         return bookBookDTOConverter.convert(bookService.findByTitleAndAuthor(title, author));
     }
 
+    @GetMapping("/find/user")
+    @PreAuthorize("permitAll()")
+    public List<BookDTO> findByUser(@RequestParam(defaultValue = "") int userId) {
+        return bookBookDTOConverter.convert(bookService.findByUser(userId));
+    }
 
     @PostMapping
     @Secured("ROLE_USER")
