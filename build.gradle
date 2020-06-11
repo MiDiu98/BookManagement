@@ -15,7 +15,7 @@ task fatJar(type: Jar) {
 	manifest {
 		attributes 'Implementation-Title': 'bookstore',
 				'Implementation-Version': 1.0,
-				'Main-Class': 'com.mkyong.DateUtils'
+				'Main-Class': 'com.ungmydieu.bookmanagement.utils.DateUtils'
 	}
 	baseName = project.name + '-all'
 	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
@@ -45,7 +45,6 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-jdbc:1.2.7.RELEASE')
 	compile "io.springfox:springfox-swagger2:2.9.2"
 	compile 'io.springfox:springfox-swagger-ui:2.9.2'
-	compile 'ch.qos.logback:logback-classic:1.1.2'
 }
 
 jacocoTestReport {
