@@ -10,6 +10,18 @@ group = 'com.ungmydieu'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+	manifest {
+		attributes 'Implementation-Title': 'bookstore',
+				'Implementation-Version': 1.0,
+				'Main-Class': 'com.mkyong.DateUtils'
+	}
+	baseName = project.name + '-all'
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	with jar
+}
+
 repositories {
 	mavenCentral()
 	jcenter()
@@ -33,6 +45,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-jdbc:1.2.7.RELEASE')
 	compile "io.springfox:springfox-swagger2:2.9.2"
 	compile 'io.springfox:springfox-swagger-ui:2.9.2'
+	compile 'ch.qos.logback:logback-classic:1.1.2'
 }
 
 jacocoTestReport {
