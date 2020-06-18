@@ -19,6 +19,8 @@ public class CommentDTO {
     @NotBlank
     private String message;
 
+    private String author;
+
     private LocalDateTime createAt;
 
     private  LocalDateTime updateAt;
