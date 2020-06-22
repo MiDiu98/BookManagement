@@ -58,6 +58,5 @@ public class UserController {
     @Secured("ROLE_ADMIN")
     public UserDTO updateByAdmin(@PathVariable int id, @RequestBody UserDTO userDTO) {
         return userUserDTOConverter.convert(userService.updateByAdmin(id, userDTO));
-
     }
 }
