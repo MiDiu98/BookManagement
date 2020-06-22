@@ -10,6 +10,18 @@ group = 'com.ungmydieu'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+	manifest {
+		attributes 'Implementation-Title': 'bookstore',
+				'Implementation-Version': 1.0,
+				'Main-Class': 'com.ungmydieu.bookmanagement.utils.DateUtils'
+	}
+	baseName = project.name + '-all'
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	with jar
+}
+
 repositories {
 	mavenCentral()
 	jcenter()
