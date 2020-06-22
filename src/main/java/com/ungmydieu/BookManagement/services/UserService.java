@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface UserService {
     List<User> getAll();
+    List<User> getUserByEnabled(boolean enabled);
     User getUserById(int id);
     User update(Principal principal, int id, UserDTO userDTO);
     User updateByAdmin(int id, UserDTO userDTO);

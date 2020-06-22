@@ -1,10 +1,7 @@
 package com.ungmydieu.bookmanagement.models.dao;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -14,6 +11,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Table(name="users")
 public class User {
 
