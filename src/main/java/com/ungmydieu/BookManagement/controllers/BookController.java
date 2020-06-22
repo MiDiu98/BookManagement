@@ -42,6 +42,7 @@ public class BookController {
     }
 
     @GetMapping("/enable")
+    @PreAuthorize("permitAll()")
     public List<BookDTO> getAllBookEnable(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "10") Integer pageSize,

@@ -30,7 +30,7 @@ public class CommentController {
         return commentCommentDTOConverter.convert(commentService.getAllByBook(bookId));
     }
 
-    @GetMapping("/{bookId}/{id}")
+    @GetMapping("/comment/{id}")
     @PreAuthorize("permitAll()")
     public CommentDTO getById(@PathVariable int id) {
         return commentCommentDTOConverter.convert(commentService.getById(id));
@@ -42,16 +42,16 @@ public class CommentController {
         return commentCommentDTOConverter.convert(commentService.create(principal, bookId, commentDTO));
     }
 
-    @PutMapping("/{bookId}/{id}")
+    @PutMapping("/{id}")
     @Secured("ROLE_USER")
-    public CommentDTO update(Principal principal, @PathVariable int bookId, @PathVariable int id, @RequestBody CommentDTO commentDTO) {
+    public CommentDTO update(Principal principal, @PathVariable int id, @RequestBody CommentDTO commentDTO) {
         return commentCommentDTOConverter.convert(commentService.update(principal, id, commentDTO));
     }
 
 
-    @DeleteMapping("/{bookId}/{id}")
+    @DeleteMapping("/{id}")
     @Secured("ROLE_USER")
-    public void delete(Principal principal, @PathVariable int bookId, @PathVariable int id) {
+    public void delete(Principal principal, @PathVariable int id) {
         commentService.delete(principal, id);
     }
 }
