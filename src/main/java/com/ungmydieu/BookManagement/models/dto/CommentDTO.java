@@ -19,7 +19,7 @@ public class CommentDTO {
     @NotBlank
     private String message;
 
-    private String author;
+    private String fullname;
 
     private LocalDateTime createAt;
 
