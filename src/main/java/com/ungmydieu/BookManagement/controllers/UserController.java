@@ -24,9 +24,21 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    @PreAuthorize("permitAll()")
+    @Secured("ROLE_ADMIN")
     public List<UserDTO> getAll() {
         return userUserDTOConverter.convert(userService.getAll());
+    }
+
+    @GetMapping("?enabled=true")
+    @PreAuthorize("permitAll()")
+    public List<UserDTO> getEnabledUser() {
+        return userUserDTOConverter.convert(userService.getUserByEnabled(true));
+    }
+
+    @GetMapping("?enabled=false")
+    @Secured("ROLE_ADMIN")
+    public List<UserDTO> getDisabledUser() {
+        return userUserDTOConverter.convert(userService.getUserByEnabled(false));
     }
 
     @GetMapping("/{id}")
@@ -46,6 +58,5 @@ public class UserController {
     @Secured("ROLE_ADMIN")
     public UserDTO updateByAdmin(@PathVariable int id, @RequestBody UserDTO userDTO) {
         return userUserDTOConverter.convert(userService.updateByAdmin(id, userDTO));
-
     }
 }

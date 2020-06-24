@@ -29,6 +29,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> getUserByEnabled(boolean enabled) {
+        return userRepository.findAllByEnabled(enabled);
+    }
+
+    @Override
     public User getUserById(int id) {
         verifyUserIdExist(id);
         return userRepository.findById(id).get();
