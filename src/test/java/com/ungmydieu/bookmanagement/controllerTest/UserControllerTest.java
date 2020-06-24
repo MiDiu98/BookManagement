@@ -68,7 +68,8 @@ public class UserControllerTest {
     @Test
     public void getDisableUser_isOK() throws Exception {
         Mockito.when(userService.getUserByEnabled(false)).thenReturn(Arrays.asList(user2));
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users?enabled=false")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users")
+                .param("enabled", "false")
                 .header("Authorization", "Bearer " + adminToken))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -76,8 +77,8 @@ public class UserControllerTest {
     @Test
     public void getEnableUser_isOK() throws Exception {
         Mockito.when(userService.getUserByEnabled(true)).thenReturn(Arrays.asList(user1, admin));
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users?enabled=true")
-                            .header("Authorization", "Bearer " + adminToken))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/enabled")
+                            .header("Authorization", "Bearer $scope"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
