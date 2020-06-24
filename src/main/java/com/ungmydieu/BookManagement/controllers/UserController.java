@@ -29,16 +29,16 @@ public class UserController {
         return userUserDTOConverter.convert(userService.getAll());
     }
 
-    @GetMapping("?enabled=true")
+    @GetMapping("/enabled")
     @PreAuthorize("permitAll()")
     public List<UserDTO> getEnabledUser() {
         return userUserDTOConverter.convert(userService.getUserByEnabled(true));
     }
 
-    @GetMapping("?enabled=false")
+    @GetMapping("/admin")
     @Secured("ROLE_ADMIN")
-    public List<UserDTO> getDisabledUser() {
-        return userUserDTOConverter.convert(userService.getUserByEnabled(false));
+    public List<UserDTO> getUserByAdmin(@RequestParam boolean enabled) {
+        return userUserDTOConverter.convert(userService.getUserByEnabled(enabled));
     }
 
     @GetMapping("/{id}")
