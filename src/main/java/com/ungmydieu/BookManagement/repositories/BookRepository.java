@@ -13,9 +13,10 @@ import java.util.List;
 
 @Repository
 public interface BookRepository extends CrudRepository<Book, Integer>, JpaRepository<Book, Integer>, PagingAndSortingRepository<Book, Integer> {
-    List<Book> findByTitleContainingAndAuthorContainingAllIgnoreCase(String title, String author);
+    List<Book> findByTitleContainingAndAuthorContainingAndEnabledTrueAllIgnoreCase(String title, String author);
+    List<Book> findAllByUserAndEnabledTrue(User user);
     List<Book> findAllByUser(User user);
-    List<Book> findAllByEnabledFalse();
+    List<Book> findAllByEnabled(boolean enabled);
     Slice<Book> findAllByEnabledTrue(Pageable pageable);
     int countAllByEnabledTrue();
 }

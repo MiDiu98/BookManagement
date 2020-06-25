@@ -75,8 +75,9 @@ public class BookControllerTest {
 
     @Test
     public void test_getDisabledBooks() throws Exception{
-        Mockito.when(bookService.getAllBooksDisable()).thenReturn(Arrays.asList(book3));
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/books/disable")
+        Mockito.when(bookService.getBooksByAdmin(false)).thenReturn(Arrays.asList(book3));
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/books/admin")
+                .param("enabled", "false")
                 .header("Authorization", "Bearer " + adminToken))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }

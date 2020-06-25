@@ -35,12 +35,6 @@ public class BookController {
         return bookBookDTOConverter.convert(bookService.getAllBooks(pageNo, pageSize, sortBy, order));
     }
 
-    @GetMapping("/disable")
-    @Secured("ROLE_ADMIN")
-    public List<BookDTO> getAllBooksDisable() {
-        return bookBookDTOConverter.convert(bookService.getAllBooksDisable());
-    }
-
     @GetMapping("/enable")
     @PreAuthorize("permitAll()")
     public List<BookDTO> getAllBookEnable(
@@ -50,6 +44,12 @@ public class BookController {
             @RequestParam(defaultValue = "asc") String order)
     {
         return bookBookDTOConverter.convert(bookService.getAllBooksEnable(pageNo, pageSize, sortBy, order));
+    }
+
+    @GetMapping("/admin")
+    @Secured("ROLE_ADMIN")
+    public List<BookDTO> getBooksByAdmin(@RequestParam boolean enabled) {
+        return bookBookDTOConverter.convert(bookService.getBooksByAdmin(enabled));
     }
 
     @GetMapping("/{id}")
