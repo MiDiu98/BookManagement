@@ -12,4 +12,5 @@ public interface UserService {
     User getUserById(int id);
     User update(Principal principal, int id, UserDTO userDTO);
     User updateByAdmin(int id, UserDTO userDTO);
+    void delete(String role, Principal principal, int id);
 }

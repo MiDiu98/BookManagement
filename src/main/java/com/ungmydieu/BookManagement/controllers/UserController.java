@@ -1,5 +1,6 @@
 package com.ungmydieu.bookmanagement.controllers;
 
+import com.ungmydieu.bookmanagement.constants.RoleConstants;
 import com.ungmydieu.bookmanagement.converters.bases.Converter;
 import com.ungmydieu.bookmanagement.models.dao.User;
 import com.ungmydieu.bookmanagement.models.dto.UserDTO;
@@ -58,5 +59,17 @@ public class UserController {
     @Secured("ROLE_ADMIN")
     public UserDTO updateByAdmin(@PathVariable int id, @RequestBody UserDTO userDTO) {
         return userUserDTOConverter.convert(userService.updateByAdmin(id, userDTO));
+    }
+
+    @DeleteMapping("/{id}")
+    @Secured("ROLE_USER")
+    public void delete(Principal principal, @PathVariable int id) {
+        userService.delete(RoleConstants.USER, principal, id);
+    }
+
+    @DeleteMapping("/admin/{id}")
+    @Secured("ROLE_ADMIN")
+    public void deleteByAdmin(Principal principal, @PathVariable int id) {
+        userService.delete(RoleConstants.ADMIN, principal, id);
     }
 }

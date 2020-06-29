@@ -1,5 +1,6 @@
 package com.ungmydieu.bookmanagement.services.impl;
 
+import com.ungmydieu.bookmanagement.constants.RoleConstants;
 import com.ungmydieu.bookmanagement.exceptions.BadRequestException;
 import com.ungmydieu.bookmanagement.exceptions.NotFoundException;
 import com.ungmydieu.bookmanagement.models.dao.User;
@@ -64,6 +65,14 @@ public class UserServiceImpl implements UserService {
             user.getRoles().add(roleRepository.findByName(role));
         }
         return userRepository.save(user);
+    }
+
+    @Override
+    public void delete(String role, Principal principal, int id) {
+        verifyUserIdExist(id);
+        if (role.equals(RoleConstants.USER)) verifyAuthor(principal, id);
+
+        userRepository.deleteById(id);
     }
 
     private void verifyUserIdExist(int id) {
