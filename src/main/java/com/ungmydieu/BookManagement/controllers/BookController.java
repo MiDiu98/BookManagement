@@ -50,8 +50,11 @@ public class BookController {
 
     @GetMapping("/admin")
     @Secured("ROLE_ADMIN")
-    public List<BookDTO> getBooksByAdmin(@RequestParam boolean enabled) {
-        return bookBookDTOConverter.convert(bookService.getBooksByAdmin(enabled));
+    public List<BookDTO> getBooksByAdmin(
+            @RequestParam boolean enabled,
+            @RequestParam String sortBy,
+            @RequestParam String order) {
+        return bookBookDTOConverter.convert(bookService.getBooksByAdmin(enabled, sortBy, order));
     }
 
     @GetMapping("/{id}")

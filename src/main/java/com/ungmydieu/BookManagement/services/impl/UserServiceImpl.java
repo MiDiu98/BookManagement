@@ -9,6 +9,7 @@ import com.ungmydieu.bookmanagement.repositories.RoleRepository;
 import com.ungmydieu.bookmanagement.repositories.UserRepository;
 import com.ungmydieu.bookmanagement.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +31,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUserByEnabled(boolean enabled) {
-        return userRepository.findAllByEnabled(enabled);
+    public List<User> getUserByAdmin(boolean enabled, String sortBy, String order) {
+        Sort sortOrder = order.equals("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        return userRepository.findAllByEnabled(enabled, sortOrder);
     }
 
     @Override

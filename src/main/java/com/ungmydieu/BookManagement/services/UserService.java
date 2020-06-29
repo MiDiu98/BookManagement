@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UserService {
     List<User> getAll();
-    List<User> getUserByEnabled(boolean enabled);
+    List<User> getUserByAdmin(boolean enabled, String sortBy, String order);
     User getUserById(int id);
     User update(Principal principal, int id, UserDTO userDTO);
     User updateByAdmin(int id, UserDTO userDTO);

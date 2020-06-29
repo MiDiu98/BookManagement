@@ -59,8 +59,9 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getBooksByAdmin(boolean enabled) {
-        return bookRepository.findAllByEnabled(enabled);
+    public List<Book> getBooksByAdmin(boolean enabled, String sortBy, String order) {
+        Sort sortOrder = order.equals("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        return bookRepository.findAllByEnabled(enabled, sortOrder);
     }
 
     @Override
