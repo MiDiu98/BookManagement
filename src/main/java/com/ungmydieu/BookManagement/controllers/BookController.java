@@ -1,8 +1,10 @@
 package com.ungmydieu.bookmanagement.controllers;
 
+import com.ungmydieu.bookmanagement.constants.RoleConstants;
 import com.ungmydieu.bookmanagement.converters.bases.Converter;
 import com.ungmydieu.bookmanagement.models.dao.Book;
 import com.ungmydieu.bookmanagement.models.dto.BookDTO;
+import com.ungmydieu.bookmanagement.models.dto.BookPage;
 import com.ungmydieu.bookmanagement.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -37,13 +39,13 @@ public class BookController {
 
     @GetMapping("/enable")
     @PreAuthorize("permitAll()")
-    public List<BookDTO> getAllBookEnable(
+    public BookPage getAllBookEnable(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String order)
     {
-        return bookBookDTOConverter.convert(bookService.getAllBooksEnable(pageNo, pageSize, sortBy, order));
+        return bookService.getAllBooksEnable(pageNo, pageSize, sortBy, order);
     }
 
     @GetMapping("/admin")
@@ -98,6 +100,12 @@ public class BookController {
     @DeleteMapping("/{id}")
     @Secured("ROLE_USER")
     public void delete(Principal principal, @PathVariable int id) {
-        bookService.delete(principal, id);
+        bookService.delete(RoleConstants.USER, principal, id);
+    }
+
+    @DeleteMapping("/admin/{id}")
+    @Secured("ROLE_ADMIN")
+    public void deleteByAdmin(Principal principal, @PathVariable int id) {
+        bookService.delete(RoleConstants.ADMIN, principal, id);
     }
 }

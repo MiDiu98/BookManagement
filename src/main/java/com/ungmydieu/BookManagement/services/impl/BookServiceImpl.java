@@ -1,10 +1,13 @@
 package com.ungmydieu.bookmanagement.services.impl;
 
+import com.ungmydieu.bookmanagement.constants.RoleConstants;
+import com.ungmydieu.bookmanagement.converters.bases.Converter;
 import com.ungmydieu.bookmanagement.exceptions.BadRequestException;
 import com.ungmydieu.bookmanagement.exceptions.NotFoundException;
 import com.ungmydieu.bookmanagement.models.dao.Book;
 import com.ungmydieu.bookmanagement.models.dao.User;
 import com.ungmydieu.bookmanagement.models.dto.BookDTO;
+import com.ungmydieu.bookmanagement.models.dto.BookPage;
 import com.ungmydieu.bookmanagement.repositories.BookRepository;
 import com.ungmydieu.bookmanagement.repositories.UserRepository;
 import com.ungmydieu.bookmanagement.services.BookService;
@@ -19,6 +22,8 @@ import java.util.List;
 
 @Service
 public class BookServiceImpl implements BookService {
+    @Autowired
+    private Converter<Book, BookDTO> bookBookDTOConverter;
 
     @Autowired
     private BookRepository bookRepository;
@@ -39,16 +44,18 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getAllBooksEnable(Integer pageNo, Integer pageSize, String sortBy, String order) {
+    public BookPage getAllBooksEnable(Integer pageNo, Integer pageSize, String sortBy, String order) {
         Pageable paging = PageRequest.of(pageNo, pageSize, order.equals("desc")? Sort.by(sortBy).descending():Sort.by(sortBy).ascending());
-        Slice<Book> pagedResult = bookRepository.findAllByEnabledTrue(paging);
+        Page<Book> pagedResult = bookRepository.findAllByEnabledTrue(paging);
+        BookPage bookPage = new BookPage();
 
         if(pagedResult.hasContent()) {
-            System.out.println(bookRepository.countAllByEnabledTrue());
-            return pagedResult.getContent();
-        } else {
-            return new ArrayList<Book>();
+            bookPage.setBooksDto(bookBookDTOConverter.convert(pagedResult.getContent()));
+            bookPage.setCurrentPage(pagedResult.getNumber());
+            bookPage.setTotalPages(pagedResult.getTotalPages());
         }
+
+        return bookPage;
     }
 
     @Override
@@ -114,9 +121,9 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void delete(Principal principal, int id) {
+    public void delete(String role, Principal principal, int id) {
         verifyBookIdExist(id);
-        verifyAuthor(principal, id);
+        if (role.equals(RoleConstants.USER)) verifyAuthor(principal, id);
 
         bookRepository.delete(bookRepository.getOne(id));
     }
