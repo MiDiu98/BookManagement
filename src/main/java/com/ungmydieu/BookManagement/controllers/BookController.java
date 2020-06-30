@@ -16,7 +16,6 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("api/books")
-//@PreAuthorize("isAuthenticated()")
 public class BookController {
 
     @Autowired
@@ -26,7 +25,6 @@ public class BookController {
     private BookService bookService;
 
     @GetMapping("/enable")
-    //@PreAuthorize("permitAll()")
     public BookPage getAllBookEnable(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "10") Integer pageSize,
@@ -37,19 +35,16 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    //@PreAuthorize("permitAll()")
     public BookDTO getById(@PathVariable int id) {
         return bookBookDTOConverter.convert(bookService.getBookByIdAndEnabledTrue(id));
     }
 
     @GetMapping("/find")
-    //@PreAuthorize("permitAll()")
     public List<BookDTO> findByTitleOrAuthor(@RequestParam(defaultValue = "") String title, @RequestParam(defaultValue = "") String author) {
         return bookBookDTOConverter.convert(bookService.findByTitleAndAuthor(title, author));
     }
 
     @GetMapping("/find/user")
-    //@PreAuthorize("permitAll()")
     public List<BookDTO> findByUser(@RequestParam(defaultValue = "") int userId) {
         return bookBookDTOConverter.convert(bookService.findByUser(userId));
     }
