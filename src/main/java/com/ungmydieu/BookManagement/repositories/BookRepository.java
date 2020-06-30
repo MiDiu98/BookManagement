@@ -19,5 +19,6 @@ public interface BookRepository extends CrudRepository<Book, Integer>, JpaReposi
     List<Book> findAllByUser(User user);
     List<Book> findAllByEnabled(boolean enabled, Sort sort);
     Page<Book> findAllByEnabledTrue(Pageable pageable);
+    Book findByIdAndEnabledTrue(int id);
 }
 

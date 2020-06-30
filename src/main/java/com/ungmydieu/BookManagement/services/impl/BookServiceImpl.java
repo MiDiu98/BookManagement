@@ -87,6 +87,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public Book getBookByIdAndEnabledTrue(int id) {
+        return bookRepository.findByIdAndEnabledTrue(id);
+    }
+
+    @Override
     public Book create(Principal principal, BookDTO bookDTO) {
         Book book = new Book(bookDTO.getTitle(), bookDTO.getAuthor(), LocalDateTime.now(), LocalDateTime.now(),true);
         book.setDescription(bookDTO.getDescription());
