@@ -58,25 +58,19 @@ public class UserControllerTest {
     }
 
     @Test
-    public void getAll_isOK() throws Exception {
-        Mockito.when(userService.getAll()).thenReturn(Arrays.asList(user1, user2, admin));
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users")
-                .header("Authorization", "Bearer " + adminToken))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
     public void getDisableUser_isOK() throws Exception {
-        Mockito.when(userService.getUserByEnabled(false)).thenReturn(Arrays.asList(user2));
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users")
+        Mockito.when(userService.getUserByAdmin(false, "id", "asc")).thenReturn(Arrays.asList(user2));
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/admin/users")
                 .param("enabled", "false")
+                .param("sortBy", "id")
+                .param("order", "asc")
                 .header("Authorization", "Bearer " + adminToken))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     public void getEnableUser_isOK() throws Exception {
-        Mockito.when(userService.getUserByEnabled(true)).thenReturn(Arrays.asList(user1, admin));
+        Mockito.when(userService.getUserByAdmin(true, "id", "asc")).thenReturn(Arrays.asList(user1, admin));
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/enabled")
                             .header("Authorization", "Bearer $scope"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -98,7 +92,7 @@ public class UserControllerTest {
         user1.setEnabled(false);
 
         Mockito.when(userService.updateByAdmin(1, userDTO)).thenReturn(user1);
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/users/admin/1" )
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/admin/users/1" )
                 .contentType(MediaType.APPLICATION_JSON).content(json)
                 .header("Authorization", "Bearer " + adminToken))
                 .andExpect(MockMvcResultMatchers.status().isOk());

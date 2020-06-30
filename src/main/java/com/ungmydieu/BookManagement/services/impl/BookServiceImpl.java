@@ -121,6 +121,7 @@ public class BookServiceImpl implements BookService {
     public Book updateByAdmin(int id, BookDTO bookDTO) {
         Book book = bookRepository.getOne(id);
 
+        book.setUpdateAt(bookDTO.getUpdateAt());
         book.setEnabled(bookDTO.isEnabled());
         bookRepository.save(book);
         return bookRepository.findById(id).get();

@@ -1,10 +1,11 @@
 package com.ungmydieu.bookmanagement.controllerTest;
 
-import com.google.gson.Gson;
+import com.ungmydieu.bookmanagement.converters.bases.Converter;
 import com.ungmydieu.bookmanagement.models.dao.Book;
 import com.ungmydieu.bookmanagement.models.dao.Role;
 import com.ungmydieu.bookmanagement.models.dao.User;
 import com.ungmydieu.bookmanagement.models.dto.BookDTO;
+import com.ungmydieu.bookmanagement.models.dto.BookPage;
 import com.ungmydieu.bookmanagement.services.BookService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,6 @@ import org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -36,6 +36,9 @@ import java.util.Set;
 public class BookControllerTest {
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private Converter<Book, BookDTO> bookBookDTOConverter;
 
     @MockBean
     private BookService bookService;
@@ -58,35 +61,37 @@ public class BookControllerTest {
     }
 
     @Test
-    public void test_getAllBooks() throws Exception{
-        Mockito.when(bookService.getAllBooks(0, 5, "id", "asc")).thenReturn(Arrays.asList(book1, book2, book3));
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/books?pageNo=0&pageSize=5&sortBy=id&order=asc")
-                .header("Authorization", "Bearer " + adminToken))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
     public void test_getEnabledBooks() throws Exception{
-        Mockito.when(bookService.getAllBooksEnable(0, 5, "id", "asc")).thenReturn(Arrays.asList(book1, book2));
+        Mockito.when(bookService.getAllBooksEnable(0, 5, "id", "asc")).thenReturn(new BookPage(bookBookDTOConverter.convert(Arrays.asList(book1, book2)), 0, 1));
         mockMvc.perform(MockMvcRequestBuilders.get("/api/books/enable?pageNo=0&pageSize=5&sortBy=id&order=asc")
                 .header("Authorization", "Bearer " + "$scope"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
-    public void test_getDisabledBooks() throws Exception{
-        Mockito.when(bookService.getBooksByAdmin(false)).thenReturn(Arrays.asList(book3));
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/books/admin")
+    public void test_getBookByAdmin() throws Exception{
+        Mockito.when(bookService.getBooksByAdmin(false, "id", "asc")).thenReturn(Arrays.asList(book3));
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/admin/books")
                 .param("enabled", "false")
+                .param("sortBy", "id")
+                .param("order", "asc")
                 .header("Authorization", "Bearer " + adminToken))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     public void test_getBookById() throws Exception{
-        Mockito.when(bookService.getBookById(1)).thenReturn(book1);
+        Mockito.when(bookService.getBookByIdAndEnabledTrue(1)).thenReturn(book1);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/books/1")
                 .header("Authorization", "Bearer " + "$scope"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void test_getBookByIdAdmin() throws Exception{
+        Mockito.when(bookService.getBookById(3)).thenReturn(book3);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/admin/books/3")
+                .header("Authorization", "Bearer " + adminToken))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -106,18 +111,4 @@ public class BookControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    @Test
-    public void test_updateByAdmin() throws Exception{
-        BookDTO bookDTO = new BookDTO(1, "Book1", "author1", "description", LocalDateTime.now(), LocalDateTime.now(), "images", false, 1);
-        Gson gson = new Gson();
-        String json = gson.toJson(bookDTO);
-
-        book1.setEnabled(false);
-
-        Mockito.when(bookService.updateByAdmin(1, bookDTO)).thenReturn(book1);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/books/find/user?userId=1")
-                .header("Authorization", "Bearer " + adminToken)
-                .contentType(MediaType.APPLICATION_JSON).content(json))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
 }
