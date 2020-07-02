@@ -4,6 +4,7 @@ import com.ungmydieu.bookmanagement.constants.RoleConstants;
 import com.ungmydieu.bookmanagement.converters.bases.Converter;
 import com.ungmydieu.bookmanagement.models.dao.User;
 import com.ungmydieu.bookmanagement.models.dto.UserDTO;
+import com.ungmydieu.bookmanagement.models.dto.UserPage;
 import com.ungmydieu.bookmanagement.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +23,13 @@ public class UserAdminController {
     private UserService userService;
 
     @GetMapping
-    public List<UserDTO> getUserByAdmin(
+    public UserPage getUserByAdmin(
             @RequestParam boolean enabled,
-            @RequestParam String sortBy,
-            @RequestParam String order) {
-        return userUserDTOConverter.convert(userService.getUserByAdmin(enabled, sortBy, order));
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String order) {
+        return userService.getUserByAdmin(enabled, pageNo, pageSize, sortBy, order);
     }
 
     @PutMapping("/{id}")

@@ -12,12 +12,14 @@ import com.ungmydieu.bookmanagement.repositories.BookRepository;
 import com.ungmydieu.bookmanagement.repositories.UserRepository;
 import com.ungmydieu.bookmanagement.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,18 +32,6 @@ public class BookServiceImpl implements BookService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Override
-    public List<Book> getAllBooks(Integer pageNo, Integer pageSize, String sortBy, String order) {
-        Pageable paging = PageRequest.of(pageNo, pageSize, order.equals("desc")? Sort.by(sortBy).descending():Sort.by(sortBy).ascending());
-        Page<Book> pagedResult = bookRepository.findAll(paging);
-
-        if(pagedResult.hasContent()) {
-            return pagedResult.getContent();
-        } else {
-            return new ArrayList<Book>();
-        }
-    }
 
     @Override
     public BookPage getAllBooksEnable(Integer pageNo, Integer pageSize, String sortBy, String order) {
@@ -59,9 +49,18 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getBooksByAdmin(boolean enabled, String sortBy, String order) {
-        Sort sortOrder = order.equals("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
-        return bookRepository.findAllByEnabled(enabled, sortOrder);
+    public BookPage getBooksByAdmin(boolean enabled, Integer pageNo, Integer pageSize, String sortBy, String order) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, order.equals("desc")? Sort.by(sortBy).descending():Sort.by(sortBy).ascending());
+        Page<Book> pagedResult = bookRepository.findAllByEnabled(enabled, paging);
+        BookPage bookPage = new BookPage();
+
+        if(pagedResult.hasContent()) {
+            bookPage.setBooksDto(bookBookDTOConverter.convert(pagedResult.getContent()));
+            bookPage.setCurrentPage(pagedResult.getNumber());
+            bookPage.setTotalPages(pagedResult.getTotalPages());
+        }
+
+        return bookPage;
     }
 
     @Override

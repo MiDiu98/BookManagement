@@ -4,12 +4,12 @@ import com.ungmydieu.bookmanagement.constants.RoleConstants;
 import com.ungmydieu.bookmanagement.converters.bases.Converter;
 import com.ungmydieu.bookmanagement.models.dao.Book;
 import com.ungmydieu.bookmanagement.models.dto.BookDTO;
+import com.ungmydieu.bookmanagement.models.dto.BookPage;
 import com.ungmydieu.bookmanagement.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -23,11 +23,13 @@ public class BookAdminController {
     private BookService bookService;
 
     @GetMapping
-    public List<BookDTO> getBooksByAdmin(
+    public BookPage getBooksByAdmin(
             @RequestParam boolean enabled,
-            @RequestParam String sortBy,
-            @RequestParam String order) {
-        return bookBookDTOConverter.convert(bookService.getBooksByAdmin(enabled, sortBy, order));
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String order) {
+        return bookService.getBooksByAdmin(enabled, pageNo, pageSize, sortBy, order);
     }
 
     @GetMapping("/{id}")

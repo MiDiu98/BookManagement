@@ -1,24 +1,31 @@
 package com.ungmydieu.bookmanagement.services.impl;
 
 import com.ungmydieu.bookmanagement.constants.RoleConstants;
+import com.ungmydieu.bookmanagement.converters.users.UserDaoToUserDtoConverter;
 import com.ungmydieu.bookmanagement.exceptions.BadRequestException;
 import com.ungmydieu.bookmanagement.exceptions.NotFoundException;
 import com.ungmydieu.bookmanagement.models.dao.User;
 import com.ungmydieu.bookmanagement.models.dto.UserDTO;
+import com.ungmydieu.bookmanagement.models.dto.UserPage;
 import com.ungmydieu.bookmanagement.repositories.RoleRepository;
 import com.ungmydieu.bookmanagement.repositories.UserRepository;
 import com.ungmydieu.bookmanagement.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.HashSet;
-import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
+    @Autowired
+    private UserDaoToUserDtoConverter toUserDtoConverter;
+
     @Autowired
     private RoleRepository roleRepository;
 
@@ -26,14 +33,17 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
-    }
+    public UserPage getUserByAdmin(boolean enabled, Integer pageNo, Integer pageSize, String sortBy, String order) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, order.equals("desc")? Sort.by(sortBy).descending():Sort.by(sortBy).ascending());
+        Page<User> pagedResult = userRepository.findAllByEnabled(enabled, paging);
+        UserPage userPage = new UserPage();
 
-    @Override
-    public List<User> getUserByAdmin(boolean enabled, String sortBy, String order) {
-        Sort sortOrder = order.equals("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
-        return userRepository.findAllByEnabled(enabled, sortOrder);
+        if(pagedResult.hasContent()) {
+            userPage.setUsersDto(toUserDtoConverter.convert(pagedResult.getContent()));
+            userPage.setCurrentPage(pagedResult.getNumber());
+            userPage.setTotalPages(pagedResult.getTotalPages());
+        }
+        return userPage;
     }
 
     @Override

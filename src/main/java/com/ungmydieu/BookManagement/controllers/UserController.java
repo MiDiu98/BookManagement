@@ -10,7 +10,6 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -21,11 +20,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @GetMapping("/enabled")
-    public List<UserDTO> getEnabledUser() {
-        return userUserDTOConverter.convert(userService.getUserByAdmin(true, "firstName", "asc"));
-    }
 
     @GetMapping("/{id}")
     public UserDTO getUserById(@PathVariable int id) {
