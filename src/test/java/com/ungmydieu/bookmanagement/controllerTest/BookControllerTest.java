@@ -69,10 +69,35 @@ public class BookControllerTest {
     }
 
     @Test
-    public void test_getBookByAdmin() throws Exception{
-        Mockito.when(bookService.getBooksByAdmin(false, "id", "asc")).thenReturn(Arrays.asList(book3));
+    public void test_getAllBook() throws Exception{
+        BookPage bookPage = new BookPage();
+        bookPage.setBooksDto(bookBookDTOConverter.convert(Arrays.asList(book1, book2, book3)));
+        bookPage.setCurrentPage(0);
+        bookPage.setTotalPages(1);
+
+        Mockito.when(bookService.getAllBooks(0, 10, "id", "asc")).thenReturn(bookPage);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/admin/books")
                 .param("enabled", "false")
+                .param("pageNo", "0")
+                .param("pageSize", "10")
+                .param("sortBy", "id")
+                .param("order", "asc")
+                .header("Authorization", "Bearer " + adminToken))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void test_getBookByAdmin() throws Exception{
+        BookPage bookPage = new BookPage();
+        bookPage.setBooksDto(bookBookDTOConverter.convert(Arrays.asList(book3)));
+        bookPage.setCurrentPage(0);
+        bookPage.setTotalPages(1);
+
+        Mockito.when(bookService.getBooksByAdmin(false, 0, 10, "id", "asc")).thenReturn(bookPage);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/admin/books/status")
+                .param("enabled", "false")
+                .param("pageNo", "0")
+                .param("pageSize", "10")
                 .param("sortBy", "id")
                 .param("order", "asc")
                 .header("Authorization", "Bearer " + adminToken))
