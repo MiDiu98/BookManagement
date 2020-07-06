@@ -7,6 +7,7 @@ import com.ungmydieu.bookmanagement.models.dto.UserPage;
 import java.security.Principal;
 
 public interface UserService {
+    UserPage getAllUsers(Integer pageNo, Integer pageSize, String sortBy, String order);
     UserPage getUserByAdmin(boolean enabled, Integer pageNo, Integer pageSize, String sortBy, String order);
     User getUserById(int id);
     User update(Principal principal, int id, UserDTO userDTO);

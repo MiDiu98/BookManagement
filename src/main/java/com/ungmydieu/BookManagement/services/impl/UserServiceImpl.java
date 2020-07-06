@@ -1,6 +1,7 @@
 package com.ungmydieu.bookmanagement.services.impl;
 
 import com.ungmydieu.bookmanagement.constants.RoleConstants;
+import com.ungmydieu.bookmanagement.constants.SortOrderConstant;
 import com.ungmydieu.bookmanagement.converters.users.UserDaoToUserDtoConverter;
 import com.ungmydieu.bookmanagement.converters.users.UserDtoToUserDaoConverter;
 import com.ungmydieu.bookmanagement.exceptions.BadRequestException;
@@ -35,6 +36,20 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Override
+    public UserPage getAllUsers(Integer pageNo, Integer pageSize, String sortBy, String order) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, order.equals(SortOrderConstant.DESC)? Sort.by(sortBy).descending():Sort.by(sortBy).ascending());
+        Page<User> pagedResult = userRepository.findAll(paging);
+        UserPage userPage = new UserPage();
+
+        if(pagedResult.hasContent()) {
+            userPage.setUsersDto(toUserDtoConverter.convert(pagedResult.getContent()));
+            userPage.setCurrentPage(pagedResult.getNumber());
+            userPage.setTotalPages(pagedResult.getTotalPages());
+        }
+        return userPage;
+    }
 
     @Override
     public UserPage getUserByAdmin(boolean enabled, Integer pageNo, Integer pageSize, String sortBy, String order) {

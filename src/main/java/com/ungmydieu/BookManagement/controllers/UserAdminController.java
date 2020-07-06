@@ -28,6 +28,15 @@ public class UserAdminController {
     private AuthenticationService authenticationService;
 
     @GetMapping
+    public UserPage getAllUser(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String order) {
+        return userService.getAllUsers(pageNo, pageSize, sortBy, order);
+    }
+
+    @GetMapping("/status")
     public UserPage getUserByAdmin(
             @RequestParam boolean enabled,
             @RequestParam(defaultValue = "0") Integer pageNo,
