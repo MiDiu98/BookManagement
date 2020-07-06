@@ -25,10 +25,9 @@ public class UserDtoToUserDaoConverterTest {
 
     @Test
     public void test_converter() {
-        String[] roles = {"ROLE_USER", "ROLE_ADMIN"};
-        UserDTO userDTO = new UserDTO(1, "userTest@email.com", "123", "firstname", "lastname", "avatar_path", true, roles);
+        UserDTO userDTO = new UserDTO(1, "admin@email.com", "123", "firstname", "lastname", "avatar_path", true, new String[]{"ROLE_USER", "ROLE_ADMIN"});
 
         User user = userDTOUserConverter.convert(userDTO);
-        Assert.assertEquals(user.getEmail(), "userTest@email.com");
+        Assert.assertEquals(user.getFirstName(), "firstname");
     }
 }

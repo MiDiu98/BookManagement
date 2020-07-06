@@ -7,6 +7,7 @@ import com.ungmydieu.bookmanagement.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class UserDtoToUserDaoConverter extends Converter<UserDTO, User> {
@@ -14,6 +15,7 @@ public class UserDtoToUserDaoConverter extends Converter<UserDTO, User> {
     private UserRepository userRepository;
 
     @Override
+    @Transactional
     public User convert(UserDTO source) {
         User user = userRepository.getOne(source.getId());
 
