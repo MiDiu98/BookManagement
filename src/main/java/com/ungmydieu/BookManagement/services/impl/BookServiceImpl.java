@@ -26,6 +26,7 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
     @Autowired
     private Converter<Book, BookDTO> bookBookDTOConverter;
+    private Converter<BookDTO, Book> bookDTOBookConverter;
 
     @Autowired
     private BookRepository bookRepository;
@@ -92,7 +93,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book create(Principal principal, BookDTO bookDTO) {
-        Book book = new Book(bookDTO.getTitle(), bookDTO.getAuthor(), LocalDateTime.now(), LocalDateTime.now(),true);
+        Book book = new Book(bookDTO.getTitle(), bookDTO.getAuthor(), LocalDateTime.now(), LocalDateTime.now(),false);
         book.setDescription(bookDTO.getDescription());
         book.setImage(bookDTO.getImage());
         book.setUser(userRepository.findByEmail(principal.getName()));
@@ -112,18 +113,23 @@ public class BookServiceImpl implements BookService {
         book.setUpdateAt(LocalDateTime.now());
         book.setDescription(bookDTO.getDescription());
         book.setImage(bookDTO.getImage());
-        bookRepository.save(book);
-        return bookRepository.findById(id).get();
+
+        return bookRepository.save(book);
     }
 
     @Override
     public Book updateByAdmin(int id, BookDTO bookDTO) {
-        Book book = bookRepository.getOne(id);
+        verifyBookIdExist(id);
 
-        book.setUpdateAt(bookDTO.getUpdateAt());
+        Book book = bookRepository.getOne(id);
+        book.setTitle(bookDTO.getTitle());
+        book.setAuthor(bookDTO.getAuthor());
+        book.setUpdateAt(LocalDateTime.now());
+        book.setDescription(bookDTO.getDescription());
+        book.setImage(bookDTO.getImage());
         book.setEnabled(bookDTO.isEnabled());
-        bookRepository.save(book);
-        return bookRepository.findById(id).get();
+
+        return bookRepository.save(book);
     }
 
     @Override
