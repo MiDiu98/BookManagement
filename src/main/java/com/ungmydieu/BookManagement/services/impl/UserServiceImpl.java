@@ -2,8 +2,10 @@ package com.ungmydieu.bookmanagement.services.impl;
 
 import com.ungmydieu.bookmanagement.constants.RoleConstants;
 import com.ungmydieu.bookmanagement.converters.users.UserDaoToUserDtoConverter;
+import com.ungmydieu.bookmanagement.converters.users.UserDtoToUserDaoConverter;
 import com.ungmydieu.bookmanagement.exceptions.BadRequestException;
 import com.ungmydieu.bookmanagement.exceptions.NotFoundException;
+import com.ungmydieu.bookmanagement.models.dao.Role;
 import com.ungmydieu.bookmanagement.models.dao.User;
 import com.ungmydieu.bookmanagement.models.dto.UserDTO;
 import com.ungmydieu.bookmanagement.models.dto.UserPage;
@@ -15,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -25,6 +26,9 @@ import java.util.HashSet;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserDaoToUserDtoConverter toUserDtoConverter;
+
+    @Autowired
+    private UserDtoToUserDaoConverter toUserDaoConverter;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -57,11 +61,7 @@ public class UserServiceImpl implements UserService {
         verifyUserIdExist(id);
         verifyAuthor(principal, id);
 
-        User user = userRepository.getOne(id);
-        if (userDTO.getPassword() != null) user.setPassword(new BCryptPasswordEncoder().encode(userDTO.getPassword()));
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        user.setAvatar(userDTO.getAvatar());
+        User user = toUserDaoConverter.convert(userDTO);
 
         return userRepository.save(user);
     }
@@ -70,12 +70,18 @@ public class UserServiceImpl implements UserService {
     public User updateByAdmin(int id, UserDTO userDTO) {
         verifyUserIdExist(id);
 
-        User user = userRepository.getOne(id);
+        User user = toUserDaoConverter.convert(userDTO);
+
         user.setEnabled(userDTO.isEnable());
-        user.setRoles(new HashSet<>());
-        for (String role : userDTO.getRoles()){
-            user.getRoles().add(roleRepository.findByName(role));
+        if (userDTO.getRoles().length > 0) {
+            user.setRoles(new HashSet<>());
+            for (String i : userDTO.getRoles()){
+                Role role = roleRepository.findByName(i);
+                if (role != null) user.getRoles().add(role);
+                else throw new BadRequestException("Invalid role " + i);
+            }
         }
+
         return userRepository.save(user);
     }
 
