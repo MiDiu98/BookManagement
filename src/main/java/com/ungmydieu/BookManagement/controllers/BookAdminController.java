@@ -23,6 +23,15 @@ public class BookAdminController {
     private BookService bookService;
 
     @GetMapping
+    public BookPage getAllBooks(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String order) {
+        return bookService.getAllBooks(pageNo, pageSize, sortBy, order);
+    }
+
+    @GetMapping("/status")
     public BookPage getBooksByAdmin(
             @RequestParam boolean enabled,
             @RequestParam(defaultValue = "0") Integer pageNo,

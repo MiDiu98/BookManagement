@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface BookService {
     BookPage getAllBooksEnable(Integer pageNo, Integer pageSize, String sortBy, String order);
+    BookPage getAllBooks(Integer pageNo, Integer pageSize, String sortBy, String order);
     BookPage getBooksByAdmin(boolean enabled, Integer pageNo, Integer pageSize, String sortBy, String order);
     List<Book> findByTitleAndAuthor(String title, String author);
     List<Book> findByUser(int userId);

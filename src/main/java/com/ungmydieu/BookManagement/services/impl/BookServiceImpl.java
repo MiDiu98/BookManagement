@@ -1,6 +1,7 @@
 package com.ungmydieu.bookmanagement.services.impl;
 
 import com.ungmydieu.bookmanagement.constants.RoleConstants;
+import com.ungmydieu.bookmanagement.constants.SortOrderConstant;
 import com.ungmydieu.bookmanagement.converters.bases.Converter;
 import com.ungmydieu.bookmanagement.exceptions.BadRequestException;
 import com.ungmydieu.bookmanagement.exceptions.NotFoundException;
@@ -26,7 +27,6 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
     @Autowired
     private Converter<Book, BookDTO> bookBookDTOConverter;
-    private Converter<BookDTO, Book> bookDTOBookConverter;
 
     @Autowired
     private BookRepository bookRepository;
@@ -36,32 +36,26 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookPage getAllBooksEnable(Integer pageNo, Integer pageSize, String sortBy, String order) {
-        Pageable paging = PageRequest.of(pageNo, pageSize, order.equals("desc")? Sort.by(sortBy).descending():Sort.by(sortBy).ascending());
+        Pageable paging = PageRequest.of(pageNo, pageSize, order.equals(SortOrderConstant.DESC)? Sort.by(sortBy).descending():Sort.by(sortBy).ascending());
         Page<Book> pagedResult = bookRepository.findAllByEnabledTrue(paging);
-        BookPage bookPage = new BookPage();
 
-        if(pagedResult.hasContent()) {
-            bookPage.setBooksDto(bookBookDTOConverter.convert(pagedResult.getContent()));
-            bookPage.setCurrentPage(pagedResult.getNumber());
-            bookPage.setTotalPages(pagedResult.getTotalPages());
-        }
+        return bookPageResponse(pagedResult);
+    }
 
-        return bookPage;
+    @Override
+    public BookPage getAllBooks(Integer pageNo, Integer pageSize, String sortBy, String order) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, order.equals(SortOrderConstant.DESC)? Sort.by(sortBy).descending():Sort.by(sortBy).ascending());
+        Page<Book> pagedResult = bookRepository.findAll(paging);
+
+        return bookPageResponse(pagedResult);
     }
 
     @Override
     public BookPage getBooksByAdmin(boolean enabled, Integer pageNo, Integer pageSize, String sortBy, String order) {
-        Pageable paging = PageRequest.of(pageNo, pageSize, order.equals("desc")? Sort.by(sortBy).descending():Sort.by(sortBy).ascending());
+        Pageable paging = PageRequest.of(pageNo, pageSize, order.equals(SortOrderConstant.DESC)? Sort.by(sortBy).descending():Sort.by(sortBy).ascending());
         Page<Book> pagedResult = bookRepository.findAllByEnabled(enabled, paging);
-        BookPage bookPage = new BookPage();
 
-        if(pagedResult.hasContent()) {
-            bookPage.setBooksDto(bookBookDTOConverter.convert(pagedResult.getContent()));
-            bookPage.setCurrentPage(pagedResult.getNumber());
-            bookPage.setTotalPages(pagedResult.getTotalPages());
-        }
-
-        return bookPage;
+        return bookPageResponse(pagedResult);
     }
 
     @Override
@@ -157,5 +151,17 @@ public class BookServiceImpl implements BookService {
         if (!userRepository.existsById(id)) {
             throw new NotFoundException(String.format("User id %d is not found", id));
         }
+    }
+
+    private BookPage bookPageResponse(Page<Book> pagedResult) {
+        BookPage bookPage = new BookPage();
+
+        if(pagedResult.hasContent()) {
+            bookPage.setBooksDto(bookBookDTOConverter.convert(pagedResult.getContent()));
+            bookPage.setCurrentPage(pagedResult.getNumber());
+            bookPage.setTotalPages(pagedResult.getTotalPages());
+        }
+
+        return  bookPage;
     }
 }
