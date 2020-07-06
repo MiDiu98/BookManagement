@@ -8,5 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthToken {
+    private int userId;
+    private String[] roles;
     private String token;
 }
