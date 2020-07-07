@@ -75,8 +75,10 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book getBookById(int id) {
+    public Book getBookById(Principal principal, int id) {
         verifyBookIdExist(id);
+        if (userRepository.findByEmail(principal.getName()).getRoles().contains("ROLE_USER")) verifyAuthor(principal, id);
+
         return bookRepository.findById(id).get();
     }
 

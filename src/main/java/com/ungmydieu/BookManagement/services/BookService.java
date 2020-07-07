@@ -14,7 +14,7 @@ public interface BookService {
     List<Book> findByTitleAndAuthor(String title, String author);
     List<Book> findByUser(int userId);
     List<Book> getMyBooks(Principal principal);
-    Book getBookById(int id);
+    Book getBookById(Principal principal, int id);
     Book getBookByIdAndEnabledTrue(int id);
     Book create(Principal principal, BookDTO bookDTO);
     Book update(Principal principal, int id, BookDTO bookDTO);

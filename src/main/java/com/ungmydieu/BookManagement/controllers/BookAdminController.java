@@ -42,8 +42,8 @@ public class BookAdminController {
     }
 
     @GetMapping("/{id}")
-    public BookDTO getById(@PathVariable int id) {
-        return bookBookDTOConverter.convert(bookService.getBookById(id));
+    public BookDTO getById(Principal principal, @PathVariable int id) {
+        return bookBookDTOConverter.convert(bookService.getBookById(principal, id));
     }
 
     @PutMapping("/{id}")

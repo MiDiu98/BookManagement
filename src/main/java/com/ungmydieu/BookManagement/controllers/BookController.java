@@ -49,6 +49,11 @@ public class BookController {
         return bookBookDTOConverter.convert(bookService.findByUser(userId));
     }
 
+    @GetMapping("/my-books/{id}")
+    public BookDTO getMyBookById(Principal principal, @PathVariable int id) {
+        return bookBookDTOConverter.convert(bookService.getBookById(principal, id));
+    }
+
     @GetMapping("/my-books")
     @Secured("ROLE_USER")
     public List<BookDTO> getMyBooks(Principal principal) {
