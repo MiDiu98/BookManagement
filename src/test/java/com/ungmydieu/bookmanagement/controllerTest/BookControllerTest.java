@@ -113,14 +113,6 @@ public class BookControllerTest {
     }
 
     @Test
-    public void test_getBookByIdAdmin() throws Exception{
-        Mockito.when(bookService.getBookById(3)).thenReturn(book3);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/admin/books/3")
-                .header("Authorization", "Bearer " + adminToken))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
     public void test_findByTitleOrAuthor() throws Exception{
         Mockito.when(bookService.findByTitleAndAuthor("book1", "author1")).thenReturn(Arrays.asList(book1));
         mockMvc.perform(MockMvcRequestBuilders.get("/api/books/find?title=book1&author=author1")
