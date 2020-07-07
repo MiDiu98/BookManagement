@@ -1,40 +1,31 @@
 package com.ungmydieu.bookmanagement.converters.users;
 
 import com.ungmydieu.bookmanagement.converters.bases.Converter;
-import com.ungmydieu.bookmanagement.exceptions.BadRequestException;
-import com.ungmydieu.bookmanagement.models.dao.Role;
 import com.ungmydieu.bookmanagement.models.dao.User;
 import com.ungmydieu.bookmanagement.models.dto.UserDTO;
-import com.ungmydieu.bookmanagement.repositories.RoleRepository;
+import com.ungmydieu.bookmanagement.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.util.HashSet;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class UserDtoToUserDaoConverter extends Converter<UserDTO, User> {
     @Autowired
-    private RoleRepository roleRepository;
+    private UserRepository userRepository;
 
     @Override
+    @Transactional
     public User convert(UserDTO source) {
-        User user = new User();
+        User user = userRepository.getOne(source.getId());
 
-        user.setId(source.getId());
-        user.setEmail(source.getEmail());
-        user.setPassword(source.getPassword());
+        if (source.getPassword() != null) {
+            user.setPassword(new BCryptPasswordEncoder().encode(source.getPassword()));
+        }
+
+        user.setFirstName(source.getFirstName());
         user.setLastName(source.getLastName());
         user.setAvatar(source.getAvatar());
-        user.setEnabled(source.isEnable());
-
-        if (source.getRoles().length > 0) {
-            user.setRoles(new HashSet<>());
-            for (String i : source.getRoles()){
-                Role role = roleRepository.findByName(i);
-                if (role != null) user.getRoles().add(role);
-                else throw new BadRequestException("Invalid role " + i);
-            }
-        }
 
         return user;
     }

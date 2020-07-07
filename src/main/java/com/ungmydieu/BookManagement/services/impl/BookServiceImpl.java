@@ -1,24 +1,32 @@
 package com.ungmydieu.bookmanagement.services.impl;
 
+import com.ungmydieu.bookmanagement.constants.RoleConstants;
+import com.ungmydieu.bookmanagement.constants.SortOrderConstant;
+import com.ungmydieu.bookmanagement.converters.bases.Converter;
 import com.ungmydieu.bookmanagement.exceptions.BadRequestException;
 import com.ungmydieu.bookmanagement.exceptions.NotFoundException;
 import com.ungmydieu.bookmanagement.models.dao.Book;
 import com.ungmydieu.bookmanagement.models.dao.User;
 import com.ungmydieu.bookmanagement.models.dto.BookDTO;
+import com.ungmydieu.bookmanagement.models.dto.BookPage;
 import com.ungmydieu.bookmanagement.repositories.BookRepository;
 import com.ungmydieu.bookmanagement.repositories.UserRepository;
 import com.ungmydieu.bookmanagement.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class BookServiceImpl implements BookService {
+    @Autowired
+    private Converter<Book, BookDTO> bookBookDTOConverter;
 
     @Autowired
     private BookRepository bookRepository;
@@ -27,44 +35,38 @@ public class BookServiceImpl implements BookService {
     private UserRepository userRepository;
 
     @Override
-    public List<Book> getAllBooks(Integer pageNo, Integer pageSize, String sortBy, String order) {
-        Pageable paging = PageRequest.of(pageNo, pageSize, order.equals("desc")? Sort.by(sortBy).descending():Sort.by(sortBy).ascending());
+    public BookPage getAllBooksEnable(Integer pageNo, Integer pageSize, String sortBy, String order) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, order.equals(SortOrderConstant.DESC)? Sort.by(sortBy).descending():Sort.by(sortBy).ascending());
+        Page<Book> pagedResult = bookRepository.findAllByEnabledTrue(paging);
+
+        return bookPageResponse(pagedResult);
+    }
+
+    @Override
+    public BookPage getAllBooks(Integer pageNo, Integer pageSize, String sortBy, String order) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, order.equals(SortOrderConstant.DESC)? Sort.by(sortBy).descending():Sort.by(sortBy).ascending());
         Page<Book> pagedResult = bookRepository.findAll(paging);
 
-        if(pagedResult.hasContent()) {
-            return pagedResult.getContent();
-        } else {
-            return new ArrayList<Book>();
-        }
+        return bookPageResponse(pagedResult);
     }
 
     @Override
-    public List<Book> getAllBooksEnable(Integer pageNo, Integer pageSize, String sortBy, String order) {
-        Pageable paging = PageRequest.of(pageNo, pageSize, order.equals("desc")? Sort.by(sortBy).descending():Sort.by(sortBy).ascending());
-        Slice<Book> pagedResult = bookRepository.findAllByEnabledTrue(paging);
+    public BookPage getBooksByAdmin(boolean enabled, Integer pageNo, Integer pageSize, String sortBy, String order) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, order.equals(SortOrderConstant.DESC)? Sort.by(sortBy).descending():Sort.by(sortBy).ascending());
+        Page<Book> pagedResult = bookRepository.findAllByEnabled(enabled, paging);
 
-        if(pagedResult.hasContent()) {
-            System.out.println(bookRepository.countAllByEnabledTrue());
-            return pagedResult.getContent();
-        } else {
-            return new ArrayList<Book>();
-        }
-    }
-
-    @Override
-    public List<Book> getAllBooksDisable() {
-        return bookRepository.findAllByEnabledFalse();
+        return bookPageResponse(pagedResult);
     }
 
     @Override
     public List<Book> findByTitleAndAuthor(String title, String author) {
-        return bookRepository.findByTitleContainingAndAuthorContainingAllIgnoreCase(title, author);
+        return bookRepository.findByTitleContainingAndAuthorContainingAndEnabledTrueAllIgnoreCase(title, author);
     }
 
     @Override
     public List<Book> findByUser(int userId) {
         verifyUserIdExist(userId);
-        return bookRepository.findAllByUser(userRepository.getOne(userId));
+        return bookRepository.findAllByUserAndEnabledTrue(userRepository.getOne(userId));
     }
 
     @Override
@@ -73,14 +75,21 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book getBookById(int id) {
+    public Book getBookById(Principal principal, int id) {
         verifyBookIdExist(id);
+        if (userRepository.findByEmail(principal.getName()).getRoles().contains("ROLE_USER")) verifyAuthor(principal, id);
+
         return bookRepository.findById(id).get();
     }
 
     @Override
+    public Book getBookByIdAndEnabledTrue(int id) {
+        return bookRepository.findByIdAndEnabledTrue(id);
+    }
+
+    @Override
     public Book create(Principal principal, BookDTO bookDTO) {
-        Book book = new Book(bookDTO.getTitle(), bookDTO.getAuthor(), LocalDateTime.now(), LocalDateTime.now(),true);
+        Book book = new Book(bookDTO.getTitle(), bookDTO.getAuthor(), LocalDateTime.now(), LocalDateTime.now(),false);
         book.setDescription(bookDTO.getDescription());
         book.setImage(bookDTO.getImage());
         book.setUser(userRepository.findByEmail(principal.getName()));
@@ -100,23 +109,29 @@ public class BookServiceImpl implements BookService {
         book.setUpdateAt(LocalDateTime.now());
         book.setDescription(bookDTO.getDescription());
         book.setImage(bookDTO.getImage());
-        bookRepository.save(book);
-        return bookRepository.findById(id).get();
+
+        return bookRepository.save(book);
     }
 
     @Override
     public Book updateByAdmin(int id, BookDTO bookDTO) {
-        Book book = bookRepository.getOne(id);
+        verifyBookIdExist(id);
 
+        Book book = bookRepository.getOne(id);
+        book.setTitle(bookDTO.getTitle());
+        book.setAuthor(bookDTO.getAuthor());
+        book.setUpdateAt(LocalDateTime.now());
+        book.setDescription(bookDTO.getDescription());
+        book.setImage(bookDTO.getImage());
         book.setEnabled(bookDTO.isEnabled());
-        bookRepository.save(book);
-        return bookRepository.findById(id).get();
+
+        return bookRepository.save(book);
     }
 
     @Override
-    public void delete(Principal principal, int id) {
+    public void delete(String role, Principal principal, int id) {
         verifyBookIdExist(id);
-        verifyAuthor(principal, id);
+        if (role.equals(RoleConstants.USER)) verifyAuthor(principal, id);
 
         bookRepository.delete(bookRepository.getOne(id));
     }
@@ -138,5 +153,17 @@ public class BookServiceImpl implements BookService {
         if (!userRepository.existsById(id)) {
             throw new NotFoundException(String.format("User id %d is not found", id));
         }
+    }
+
+    private BookPage bookPageResponse(Page<Book> pagedResult) {
+        BookPage bookPage = new BookPage();
+
+        if(pagedResult.hasContent()) {
+            bookPage.setBooksDto(bookBookDTOConverter.convert(pagedResult.getContent()));
+            bookPage.setCurrentPage(pagedResult.getNumber());
+            bookPage.setTotalPages(pagedResult.getTotalPages());
+        }
+
+        return  bookPage;
     }
 }

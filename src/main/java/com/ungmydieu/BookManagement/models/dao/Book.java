@@ -7,6 +7,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Entity
@@ -28,6 +29,7 @@ public class Book {
     @NotBlank
     private String author;
 
+    @Size(max = 5000)
     private String description;
 
     @NonNull

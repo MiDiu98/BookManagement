@@ -1,9 +1,11 @@
 package com.ungmydieu.bookmanagement.controllerTest;
 
 import com.google.gson.Gson;
+import com.ungmydieu.bookmanagement.converters.bases.Converter;
 import com.ungmydieu.bookmanagement.models.dao.Role;
 import com.ungmydieu.bookmanagement.models.dao.User;
 import com.ungmydieu.bookmanagement.models.dto.UserDTO;
+import com.ungmydieu.bookmanagement.models.dto.UserPage;
 import com.ungmydieu.bookmanagement.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,6 +37,9 @@ public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private Converter<User, UserDTO> userUserDTOConverter;
+
     @MockBean
     private UserService userService;
 
@@ -51,32 +56,57 @@ public class UserControllerTest {
 
         Set<Role> roles = new HashSet<>();
         roles.add(roleUser);
-        user1 = new User(1, "user1@gmail.com", "123", "firstname", "lastname", true, "avatar user", roles);
-        user2 = new User(1, "user2@gmail.com", "123", "firstname", "lastname", false, "avatar user", roles);
+        user1 = new User(2, "user1@gmail.com", "123", "firstname", "lastname", true, "avatar user", roles);
+        user2 = new User(3, "user2@gmail.com", "123", "firstname", "lastname", false, "avatar user", roles);
         roles.add(roleAdmin);
         admin = new User(1, "admin@gmail.com", "123", "firstname", "lastname", true, "avatar admin", roles);
     }
 
     @Test
-    public void getAll_isOK() throws Exception {
-        Mockito.when(userService.getAll()).thenReturn(Arrays.asList(user1, user2, admin));
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users")
+    public void getAllUser() throws Exception {
+        UserPage userPage = new UserPage();
+        userPage.setUsersDto(userUserDTOConverter.convert(Arrays.asList(admin, user1, user2)));
+        userPage.setCurrentPage(0);
+        userPage.setTotalPages(1);
+
+        Mockito.when(userService.getAllUsers(0, 10,"id", "asc")).thenReturn(userPage);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/admin/users")
+                .param("sortBy", "id")
+                .param("order", "asc")
                 .header("Authorization", "Bearer " + adminToken))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     public void getDisableUser_isOK() throws Exception {
-        Mockito.when(userService.getUserByEnabled(false)).thenReturn(Arrays.asList(user2));
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users?enabled=false")
+        UserPage userPage = new UserPage();
+        userPage.setUsersDto(userUserDTOConverter.convert(Arrays.asList(user2)));
+        userPage.setCurrentPage(0);
+        userPage.setTotalPages(1);
+
+        Mockito.when(userService.getUserByAdmin(false, 0, 10,"id", "asc")).thenReturn(userPage);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/admin/users/status")
+                .param("enabled", "false")
+                .param("sortBy", "id")
+                .param("order", "asc")
                 .header("Authorization", "Bearer " + adminToken))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     public void getEnableUser_isOK() throws Exception {
-        Mockito.when(userService.getUserByEnabled(true)).thenReturn(Arrays.asList(user1, admin));
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users?enabled=true")
+        UserPage userPage = new UserPage();
+        userPage.setUsersDto(userUserDTOConverter.convert(Arrays.asList(admin, user1)));
+        userPage.setCurrentPage(0);
+        userPage.setTotalPages(1);
+
+        Mockito.when(userService.getUserByAdmin(true, 0, 10, "id", "asc")).thenReturn(userPage);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/admin/users/status")
+                            .param("enabled", "true")
+                            .param("pageNo", "0")
+                            .param("pageSize", "10")
+                            .param("sortBy", "id")
+                            .param("order", "asc")
                             .header("Authorization", "Bearer " + adminToken))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -97,7 +127,7 @@ public class UserControllerTest {
         user1.setEnabled(false);
 
         Mockito.when(userService.updateByAdmin(1, userDTO)).thenReturn(user1);
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/users/admin/1" )
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/admin/users/1" )
                 .contentType(MediaType.APPLICATION_JSON).content(json)
                 .header("Authorization", "Bearer " + adminToken))
                 .andExpect(MockMvcResultMatchers.status().isOk());

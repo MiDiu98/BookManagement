@@ -4,11 +4,13 @@ import com.google.gson.Gson;
 import com.ungmydieu.bookmanagement.models.dao.Login;
 import com.ungmydieu.bookmanagement.models.dao.Role;
 import com.ungmydieu.bookmanagement.models.dao.User;
+import com.ungmydieu.bookmanagement.models.dto.AuthToken;
 import com.ungmydieu.bookmanagement.services.AuthenticationService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration;
@@ -38,13 +40,15 @@ public class AuthenticationControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    User user;
+
     @BeforeEach
     public void init() {
         Role roleUser = new Role("ROLE_USER");
         Set<Role> roles = new HashSet<>();
         roles.add(roleUser);
 
-        User user = new User(1, "user@gmail.com", "123", "firstname", "lastname", true, "avatar", roles);
+        user = new User(1, "admin@email.com", "1234", "firstname", "lastname", true, "avatar", roles);
     }
 
     @AfterEach
@@ -52,9 +56,17 @@ public class AuthenticationControllerTest {
 
     @Test
     public void test_login() throws Exception {
+        String adminToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJzY29wZXMiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImlhdCI6MTU5MjgxNjI3NSwiZXhwIjoxNTk1NDA4Mjc1fQ.nrPyqpz-xVoVrYTjcEUtLf7NMbx9IJbkXnKxt-dZVew";
         Login login = new Login("admin@email.com", "1234");
+        AuthToken authToken = new AuthToken();
+
+        authToken.setUserId(1);
+        authToken.setRoles(new String[]{"ROLE_USER", "ROLE_ADMIN"});
+        authToken.setToken(adminToken);
+
         Gson gson = new Gson();
         String json = gson.toJson(login);
+        Mockito.when(authenticationService.login(login)).thenReturn(authToken);
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isOk());

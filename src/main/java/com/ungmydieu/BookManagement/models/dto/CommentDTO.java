@@ -21,6 +21,8 @@ public class CommentDTO {
 
     private String fullname;
 
+    private String avatarUser;
+
     private LocalDateTime createAt;
 
     private  LocalDateTime updateAt;

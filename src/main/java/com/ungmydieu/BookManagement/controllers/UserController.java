@@ -1,21 +1,19 @@
 package com.ungmydieu.bookmanagement.controllers;
 
+import com.ungmydieu.bookmanagement.constants.RoleConstants;
 import com.ungmydieu.bookmanagement.converters.bases.Converter;
 import com.ungmydieu.bookmanagement.models.dao.User;
 import com.ungmydieu.bookmanagement.models.dto.UserDTO;
 import com.ungmydieu.bookmanagement.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("api/users")
-@PreAuthorize("isAuthenticated()")
 public class UserController {
     @Autowired
     private Converter<User, UserDTO> userUserDTOConverter;
@@ -23,26 +21,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
-    @Secured("ROLE_ADMIN")
-    public List<UserDTO> getAll() {
-        return userUserDTOConverter.convert(userService.getAll());
-    }
-
-    @GetMapping("?enabled=true")
-    @PreAuthorize("permitAll()")
-    public List<UserDTO> getEnabledUser() {
-        return userUserDTOConverter.convert(userService.getUserByEnabled(true));
-    }
-
-    @GetMapping("?enabled=false")
-    @Secured("ROLE_ADMIN")
-    public List<UserDTO> getDisabledUser() {
-        return userUserDTOConverter.convert(userService.getUserByEnabled(false));
-    }
-
     @GetMapping("/{id}")
-    @PreAuthorize("permitAll()")
     public UserDTO getUserById(@PathVariable int id) {
         return userUserDTOConverter.convert(userService.getUserById(id));
     }
@@ -54,9 +33,10 @@ public class UserController {
 
     }
 
-    @PutMapping("/admin/{id}")
-    @Secured("ROLE_ADMIN")
-    public UserDTO updateByAdmin(@PathVariable int id, @RequestBody UserDTO userDTO) {
-        return userUserDTOConverter.convert(userService.updateByAdmin(id, userDTO));
+    @DeleteMapping("/{id}")
+    @Secured("ROLE_USER")
+    public void delete(Principal principal, @PathVariable int id) {
+        userService.delete(RoleConstants.USER, principal, id);
     }
+
 }

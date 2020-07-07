@@ -3,7 +3,9 @@ package com.ungmydieu.bookmanagement.services.impl;
 import com.ungmydieu.bookmanagement.configurations.TokenProvider;
 import com.ungmydieu.bookmanagement.exceptions.BadRequestException;
 import com.ungmydieu.bookmanagement.models.dao.Login;
+import com.ungmydieu.bookmanagement.models.dao.Role;
 import com.ungmydieu.bookmanagement.models.dao.User;
+import com.ungmydieu.bookmanagement.models.dto.AuthToken;
 import com.ungmydieu.bookmanagement.models.dto.Register;
 import com.ungmydieu.bookmanagement.repositories.RoleRepository;
 import com.ungmydieu.bookmanagement.repositories.UserRepository;
@@ -33,14 +35,25 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private UserRepository userRepository;
 
     @Override
-    public String login(Login login) {
+    public AuthToken login(Login login) {
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         login.getEmail(),
                         login.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        final String token = jwtTokenUtil.generateToken(authentication);
-        return token;
+
+        AuthToken authToken = new AuthToken();
+        User user = userRepository.findByEmail(authentication.getName());
+        String[] roles = new String[user.getRoles().size()];
+
+        int i = 0;
+        for (Role role : user.getRoles())
+            roles[i++] = role.getName();
+
+        authToken.setUserId(user.getId());
+        authToken.setRoles(roles);
+        authToken.setToken(jwtTokenUtil.generateToken(authentication));
+        return authToken;
     }
 
     @Override
