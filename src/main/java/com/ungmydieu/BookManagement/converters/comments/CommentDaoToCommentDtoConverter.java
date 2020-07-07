@@ -13,6 +13,7 @@ public class CommentDaoToCommentDtoConverter extends Converter<Comment, CommentD
 
         commentDTO.setId(source.getId());
         commentDTO.setFullname(source.getUser().getFirstName() + " " + source.getUser().getLastName());
+        commentDTO.setAvatarUser(source.getUser().getAvatar());
         commentDTO.setCreateAt(source.getCreateAt());
         commentDTO.setUpdateAt(source.getUpdateAt());
         commentDTO.setBookId(source.getBook().getId());
